@@ -3,10 +3,10 @@ class Vec {
 
   add (b) { return new Vec(this.x + b.x, this.y + b.y) }
 //   addXY (x, y) { return new Vec(this.x + x, this.y + y) }
-//   subtract (b) { return new Vec(this.x - b.x, this.y - b.y) }
+  subtract (b) { return new Vec(this.x - b.x, this.y - b.y) }
 //   scaleByVec (a) { return new Vec(this.x * a.x, this.y * a.y) }
 //   scaleXY (x, y) { return new Vec(this.x * x, this.y * y) }
-//   scale (m) { return new Vec(this.x * m, this.y * m) }
+scale (m) { return new Vec(this.x * m, this.y * m) }
 //   rotate (theta, around) { return Vec.rotate(this, theta, around) }
 //   rotate90 (scale, around) { return Vec.rotate90(this, scale, around) }
 //   integrateTo (b) { return Vec.integrateBetween(this, b) }
@@ -16,13 +16,39 @@ class Vec {
 //   invert () { return this.scale(-1) }
 //   distance (a) { return this.subtract(a).mag }
 
-//   bounds (b1, b2 = b1.invert()) {
-//     const x2 = Math.min(b2.x, b1.x); const x1 = Math.max(b2.x, b1.x)
-//     const y2 = Math.min(b2.y, b1.y); const y1 = Math.max(b2.y, b1.y)
-//     const x = Math.max(x2, Math.min(x1, this.x))
-//     const y = Math.max(y2, Math.min(y1, this.y))
-//     return new Vec(x, y)
-//   }
+  bounds (b1, b2 = b1.invert()) {
+    const x2 = Math.min(b2.x, b1.x); const x1 = Math.max(b2.x, b1.x)
+    const y2 = Math.min(b2.y, b1.y); const y1 = Math.max(b2.y, b1.y)
+    const x = Math.max(x2, Math.min(x1, this.x))
+    const y = Math.max(y2, Math.min(y1, this.y))
+    return new Vec(x, y)
+  }
+
+  checkbound (b){
+    
+    const x1 = Math.min(0, x)
+    const x2 = Math.max(0, x-b.x)
+    const xx = (Math.abs(x1) > x2) ? x1 : x2
+
+    const y1 = Math.min(0, y)
+    const y2 = Math.max(0, y-b.y)
+    const yy = (Math.abs(y1) > y2) ? y1 : y2
+
+    return new Vec(xx,yy)
+  }
+
+  checkbounds (a, b){
+    
+    const x1 = Math.min(0, x-a.x)
+    const x2 = Math.max(0, x-b.x)
+    const xx = (Math.abs(x1) > x2) ? x1 : x2
+
+    const y1 = Math.min(0, y-a.y)
+    const y2 = Math.max(0, y-b.y)
+    const yy = (Math.abs(y1) > y2) ? y1 : y2
+
+    return new Vec(xx,yy)
+  }
 
 //   get inverse () { return this.scale(-1) }
 //   get mag () { return Math.sqrt((this.x * this.x) + (this.y * this.y)) }
