@@ -24,12 +24,12 @@ checkBounds(a, b) {
     this.s = new Vec(xxx, yyy)
     
 }
-accelerate(a) {
+accelerate(k) {
 const facing= new Vec(0,-1).rotate(this.th)
-if(a==="ArrowUp")     this.v = this.v.add(facing)
-if(a==="ArrowDown")     this.v = this.v.add(facing.scale(-1))
-if(a==="ArrowRight")     this.th += 0.1
-if(a==="ArrowLeft")     this.th -= 0.1
+if(k?.ArrowUp)     this.v = this.v.add(facing)
+if(k?.ArrowDown)     this.v = this.v.add(facing.scale(-1))
+if(k?.ArrowRight)     this.th += 0.1
+if(k?.ArrowLeft)     this.th -= 0.1
   this.dTh = 0
 }
 getShape(){

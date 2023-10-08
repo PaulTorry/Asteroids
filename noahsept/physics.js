@@ -4,7 +4,10 @@ let triangleShape = [new Vec(0, -10), new Vec(5, 10), new Vec(-5, 10)]
 let square = new SpaceObject(250, 250, 0, 0, triangleShape)
 let rect = new SpaceObject(250, 250, 1, 1, triangleShape)
 let lastTime = 0
-document.addEventListener("keydown", keyListener)
+let keys = {}
+// document.addEventListener("keydown", keyListener)
+document.addEventListener("keydown", (e) => {keys[e.key] = true})
+document.addEventListener("keyup", (e) => {keys[e.key] = false})
 let ctx = canvas.getContext("2d")
 console.log("hello", ctx)
 draw()
@@ -56,6 +59,7 @@ function draw() {
 
 
 function update(t) {
+    console.log(keys);
 //console.log(square.s, rect.s)
     let dt = (t-lastTime)/100
 square.checkBounds(new Vec(100,100), new Vec(400,400))
@@ -63,6 +67,7 @@ rect.checkBounds(new Vec(100,100), new Vec(400,400))
 square.update(dt)
 rect.update(dt)
 lastTime = t
+square.accelerate(keys)
 //RectX += RectVelocityX*dt*0.01
 draw()
 requestAnimationFrame(update)
