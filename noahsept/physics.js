@@ -1,8 +1,12 @@
 let canvas = document.getElementById("simulationWindow")
 console.log("hi", canvas)
 let triangleShape = [new Vec(0, -10), new Vec(5, 10), new Vec(-5, 10)]
-let square = new SpaceObject(250, 250, 0, 0, triangleShape)
+let square = new SpaceShip(250, 250, 0, 0, triangleShape)
 let rect = new SpaceObject(250, 250, 1, 1, triangleShape)
+
+let objects = [square, rect]
+
+
 let lastTime = 0
 let keys = {}
 // document.addEventListener("keydown", keyListener)
@@ -30,12 +34,17 @@ function draw() {
     // ctx.fillRect(square.s.x-50,square.s.y-50,100,100)
     ctx.fillStyle = "red"
     //ctx.fillRect(square.s.x-550,square.s.y-550,100,100)
-    ctx.strokeRect(0, 0, 500, 500)
+    ctx.strokeRect(100, 100, 300, 300)
     //ctx.fillRect(rect.s.x-50, rect.s.y-5, 100, 10)
     const bound = square.s.checkbounds(new Vec(100,100), new Vec(400,400))
     ctx.strokeRect(100,100, bound.x, bound.y)
 
     sketchShape(square.getShape())
+
+    objects.forEach((o) => {
+        sketchShape(o.getShape())
+    })
+
 
     // ctx.beginPath()
     // ctx.moveTo(triangle[0].x, triangle[0].y)
@@ -62,10 +71,14 @@ function update(t) {
     console.log(keys);
 //console.log(square.s, rect.s)
     let dt = (t-lastTime)/100
-square.checkBounds(new Vec(100,100), new Vec(400,400))
-rect.checkBounds(new Vec(100,100), new Vec(400,400))
-square.update(dt)
-rect.update(dt)
+// square.checkBounds(new Vec(100,100), new Vec(400,400))
+// rect.checkBounds(new Vec(100,100), new Vec(400,400))
+// square.update(dt)
+// rect.update(dt)
+objects.forEach((o) => {
+    o.checkBounds(new Vec(100,100), new Vec(400,400))
+    o.update(dt)
+})
 lastTime = t
 square.accelerate(keys)
 //RectX += RectVelocityX*dt*0.01
