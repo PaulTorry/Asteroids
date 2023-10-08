@@ -16,10 +16,7 @@ console.log(a.x , a, a.add(b))
 
 function keyListener(e) {
 console.log(e)
-if(e.key==="ArrowUp")     square.accelerate(new Vec(0, -0.25))
-if(e.key==="ArrowDown")     square.accelerate(new Vec(0, 0.25))
-if(e.key==="ArrowRight")     square.accelerate(new Vec(0.25, 0))
-if(e.key==="ArrowLeft")     square.accelerate(new Vec(-0.25, 0))
+square.accelerate(e.key)
 draw()
 }
 

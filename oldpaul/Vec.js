@@ -6,8 +6,11 @@ class Vec {
   subtract (b) { return new Vec(this.x - b.x, this.y - b.y) }
 //   scaleByVec (a) { return new Vec(this.x * a.x, this.y * a.y) }
 //   scaleXY (x, y) { return new Vec(this.x * x, this.y * y) }
-scale (m) { return new Vec(this.x * m, this.y * m) }
+  scale (m) { return new Vec(this.x * m, this.y * m) }
 //   rotate (theta, around) { return Vec.rotate(this, theta, around) }
+  rotate (th){
+    return new Vec(this.x * Math.cos(th) + this.y * Math.sin(th), this.y * Math.cos(th) + this.x * Math.sin(th))
+  }
 //   rotate90 (scale, around) { return Vec.rotate90(this, scale, around) }
 //   integrateTo (b) { return Vec.integrateBetween(this, b) }
 //   integrateFrom (a) { return Vec.integrateBetween(a, this) }

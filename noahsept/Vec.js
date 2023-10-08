@@ -12,7 +12,9 @@ class Vec{
     scale(s) {
         return new Vec(this.x * s, this.y * s)
     }
-
+    rotate (th){
+        return new Vec(this.x * Math.cos(th) - this.y * Math.sin(th), this.y * Math.cos(th) + this.x * Math.sin(th))
+    }
     checkbounds (a, b){
     
         const x1 = Math.min(0, this.x-a.x)
