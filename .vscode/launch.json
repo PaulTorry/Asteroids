@@ -4,11 +4,12 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Launch Desktop location Chrome",
             "request": "launch",
             "type": "chrome",
-            "url": "C:\\Users\\paul_\\Documents\\GitHub\\Asteroids\\noahsept\\simulation.html",
+            "url": "C:\\Users\\paul_\\Documents\\GitHub\\Asteroids\\src\\simulation.html",
             "webRoot": "${workspaceFolder}"
         },
         {

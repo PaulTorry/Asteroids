@@ -1,0 +1,85 @@
+let canvas = document.getElementById("simulationWindow")
+console.log("hi", canvas)
+const triangleShape = [new Vec(0, -50), new Vec(-50, 50), new Vec(50, 50)]
+const bulletShape = [new Vec(0, -20), new Vec(-5, 20), new Vec(5, 20)]
+const asteroidShape = [new Vec(0, -50), new Vec(50, -20), new Vec(50, 20), new Vec(0, 50), new Vec(-50, 20), new Vec(-50, -20)]
+let objects = [
+    new SpaceObject(new Vec(250, 250), new Vec(0, 0), triangleShape),
+    new SpaceObject(new Vec(450, 50), new Vec(0, 0),  asteroidShape),
+    new SpaceObject(new Vec(50, 20), new Vec(0, 0), bulletShape),
+]
+let lastTime = 0
+let keyLog = {}
+//document.addEventListener("keydown", keyListener)
+document.addEventListener("keydown", (e) => { keyLog[e.key] = true })
+document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
+
+let ctx = canvas.getContext("2d")
+console.log("hello", ctx)
+draw()
+
+//console.log(objects[0].isInside(new Vec(240, 240)), objects[0].isInside(new Vec(30, 30)))
+//let a = new Vec(3, 4)
+//console.log(a.subtract(new Vec(2, 2)))
+//console.log(a.mag())
+
+function keyListener(e) {
+    objects[0].accelerate(e.key)
+    draw()
+}
+
+function draw() {
+    //const triangleShape = [[100, 100], [150, 150], [50, 150], [100, 100]]
+    ctx.fillStyle = "black"
+    ctx.clearRect(0, 0, 500, 500)
+    //ctx.fillRect(square.s.x - 50, square.s.y - 50, 100, 100)
+    //ctx.fillStyle = "red"
+    //ctx.fillRect(square.s.x - 550, square.s.y - 550, 100, 100)
+    ctx.strokeRect(0, 0, 500, 500)
+
+    ctx.beginPath()
+
+    function drawShape(s) {
+        ctx.moveTo(s[0].x, s[0].y)
+        s.forEach((p) => {
+            //console.log(p.x, p)
+            return ctx.lineTo(p.x, p.y)
+        }
+        )
+        ctx.closePath()
+        ctx.stroke()
+    }
+    //drawShape(triangleShape)
+    objects.forEach((o) => drawShape(o.getShape()))
+    //drawShape(rect.getShape())
+    //drawShape(square.getShape())
+    //drawShape(bullet.getShape())
+}
+
+
+function update(t) {
+    let dt = (t - lastTime) / 50
+    objects.forEach((o) => o.checkBounds(500, 500))
+    objects.forEach((o) => o.update(dt))
+    objects.forEach((o, i) => {
+        if (o.ttl < 0) { objects.splice(i, 1)}
+    }
+    )
+    objects.forEach((o, i) => {
+        if (o.isInside(objects[0].s)&&i!=0) o.ttl = 0
+    })
+    //console.log(square.s)
+    objects[0].accelerate(keyLog)
+    //RectX += RectVelocityX*dt*0.01
+    draw()
+    lastTime = t
+    requestAnimationFrame(update)
+}
+requestAnimationFrame(update)
+
+//function checkBounds() {
+//if(sX < 0) {sX += 500}
+//if(sX > 490) {sX -= 510}
+// if(sY > 490) {sY -= 510}
+//if(sY < 0) {sY += 500}
+//}
