@@ -15,8 +15,8 @@ class SpaceObject {
         this.s = this.s.add(this.v.scale(dt))
         //this.v = this.v.scale(0.99)
         //this.theta+=this.omega*dt
-
     }
+
     checkBounds(bx, by) {
         const x = this.s.x
         const xx = (x + bx) % bx
@@ -32,7 +32,7 @@ class SpaceObject {
         if (keys["ArrowLeft"]) this.theta -= this.omega
         if (keys[" "]&&this.cooldown<0) {
             this.cooldown = 30
-            objects.push(new SpaceObject(this.s, this.facing().scale(5).add(this.v), bulletShape, this.theta, 150))
+            objects.push(new SpaceObject(this.facing().scale(50).add(this.s), this.facing().scale(5).add(this.v), bulletShape, this.theta, 150))
             this.v = this.v.add(this.facing().scale(-0.5))
         }
     }
@@ -45,7 +45,7 @@ class SpaceObject {
     isInside(p)  {
     let r = this.baseShape[0].mag()
     let p2 = p.subtract(this.s).mag()
-    console.log(r, p2)
+    // console.log(r, p2)
     return p2<r
     }
 }

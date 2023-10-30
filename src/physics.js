@@ -6,7 +6,7 @@ const asteroidShape = [new Vec(0, -50), new Vec(50, -20), new Vec(50, 20), new V
 let objects = [
     new SpaceObject(new Vec(250, 250), new Vec(0, 0), triangleShape),
     new SpaceObject(new Vec(450, 50), new Vec(0, 0),  asteroidShape),
-    new SpaceObject(new Vec(50, 20), new Vec(0, 0), bulletShape),
+    new SpaceObject(new Vec(50, 20), new Vec(0, 0), makeAsteroidShape(50)),
 ]
 let lastTime = 0
 let keyLog = {}
@@ -66,7 +66,12 @@ function update(t) {
     }
     )
     objects.forEach((o, i) => {
-        if (o.isInside(objects[0].s)&&i!=0) o.ttl = 0
+        objects.forEach((oo, ii) => {
+            if (o.isInside(oo.s)&&oo!=o) {
+                o.ttl = 0
+                oo.ttl = 0
+            }  
+        })
     })
     //console.log(square.s)
     objects[0].accelerate(keyLog)
@@ -76,6 +81,19 @@ function update(t) {
     requestAnimationFrame(update)
 }
 requestAnimationFrame(update)
+
+function makeAsteroidShape(size){
+    angle = 0
+    points = [new Vec(0, size)]
+    while (angle < (2*Math.PI-2)){
+        angle += 2*Math.random()
+        console.log(angle);
+        points.push(points[0].rotate(angle).scale(Math.random()*0.2 + 0.8))
+        console.log(points);
+    }
+    return points 
+}
+makeAsteroidShape(10)
 
 //function checkBounds() {
 //if(sX < 0) {sX += 500}
