@@ -68,6 +68,7 @@ function update(t) {
     objects.forEach((o, i) => {
         objects.forEach((oo, ii) => {
             if (o.isInside(oo.s)&&oo!=o) {
+            //  if (objects[0]!=o && o.isInside(objects[0].s)) {
                 o.ttl = 0
                 oo.ttl = 0
             }  
@@ -101,3 +102,4 @@ makeAsteroidShape(10)
 // if(sY > 490) {sY -= 510}
 //if(sY < 0) {sY += 500}
 //}
+

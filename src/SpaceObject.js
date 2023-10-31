@@ -43,9 +43,22 @@ class SpaceObject {
         return new Vec(0, -1).rotate(this.theta)
     }
     isInside(p)  {
-    let r = this.baseShape[0].mag()
-    let p2 = p.subtract(this.s).mag()
-    // console.log(r, p2)
-    return p2<r
+        let points = this.getShape()
+        let lines = []
+        let sides = []
+        let inside
+        points.push(points[0])
+        for(let i = 0; i < points.length - 1; i++){
+            lines.push([points[i], points[i+1]])
+        }
+        sides = lines.map(([a,b])=> b.subtract(a).cross(b.subtract(p))  > 0)
+        // console.log(points, lines, );4
+        inside = sides.every(b => b === sides[0])
+        if (inside) console.log(sides);
+        return inside
+    // let r = this.baseShape[0].mag()
+    // let p2 = p.subtract(this.s).mag()
+    // // console.log(r, p2)
+    // return p2<r
     }
 }

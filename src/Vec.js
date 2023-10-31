@@ -18,4 +18,7 @@ class Vec{
     rotate(th) {
         return new Vec(this.x*Math.cos(th)-this.y*Math.sin(th), this.y*Math.cos(th)+this.x*Math.sin(th))
     }
+    cross(a) {
+        return this.x*a.y - a.x*this.y
+    }
 }
