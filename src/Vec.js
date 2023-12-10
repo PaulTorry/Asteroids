@@ -21,4 +21,7 @@ class Vec{
     cross(a) {
         return this.x*a.y - a.x*this.y
     }
+    unit(scale = 1) {
+        return this.scale(scale / this.mag())
+    }
 }

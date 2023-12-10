@@ -7,13 +7,14 @@ class SpaceObject {
         this.omega = 0.05
         this.ttl = ttl
         this.cooldown = 0
+        this.mass = 10
     }
     update(dt) {
         this.ttl -= dt
         this.cooldown -= dt
         //console.log(this.ttl)
         this.s = this.s.add(this.v.scale(dt))
-        //this.v = this.v.scale(0.99)
+        this.v = this.v.scale(0.995)
         //this.theta+=this.omega*dt
     }
 
@@ -32,9 +33,12 @@ class SpaceObject {
         if (keys["ArrowLeft"]) this.theta -= this.omega
         if (keys[" "]&&this.cooldown<0) {
             this.cooldown = 30
-            objects.push(new SpaceObject(this.facing().scale(50).add(this.s), this.facing().scale(5).add(this.v), bulletShape, this.theta, 150))
+            objects.push(new SpaceObject(this.facing().scale(80).add(this.s), this.facing().scale(5).add(this.v), bulletShape, this.theta, 150))
             this.v = this.v.add(this.facing().scale(-0.5))
         }
+    }
+    recieveImpulse(vv){
+        this.v = this.v.add(vv.scale(1/this.mass))
     }
     getShape() {
         return this.baseShape.map((p) => p.rotate(this.theta).add(this.s))
@@ -42,6 +46,12 @@ class SpaceObject {
     facing() {
         return new Vec(0, -1).rotate(this.theta)
     }
+
+    isOneInside(a){
+        // console.log(a);
+        return !a.every(p => !this.isInside(p))
+    }
+
     isInside(p)  {
         let points = this.getShape()
         let lines = []

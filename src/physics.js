@@ -9,8 +9,9 @@ let objects = [
     new SpaceObject(new Vec(50, 20), new Vec(0, 0), makeAsteroidShape(50)),
 ]
 let lastTime = 0
+let simDelay = 50
 let keyLog = {}
-//document.addEventListener("keydown", keyListener)
+document.addEventListener("keydown", keyListener)
 document.addEventListener("keydown", (e) => { keyLog[e.key] = true })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
 
@@ -24,8 +25,9 @@ draw()
 //console.log(a.mag())
 
 function keyListener(e) {
-    objects[0].accelerate(e.key)
-    draw()
+    if (e.key == "1") simDelay *= 1.2
+    if (e.key == "2") simDelay /= 1.2
+    if (e.key == "3") simDelay = 50
 }
 
 function draw() {
@@ -58,7 +60,7 @@ function draw() {
 
 
 function update(t) {
-    let dt = (t - lastTime) / 50
+    let dt = (t - lastTime) / simDelay
     objects.forEach((o) => o.checkBounds(500, 500))
     objects.forEach((o) => o.update(dt))
     objects.forEach((o, i) => {
@@ -67,10 +69,12 @@ function update(t) {
     )
     objects.forEach((o, i) => {
         objects.forEach((oo, ii) => {
-            if (o.isInside(oo.s)&&oo!=o) {
-            //  if (objects[0]!=o && o.isInside(objects[0].s)) {
-                o.ttl = 0
-                oo.ttl = 0
+            if (oo!=o && o.isOneInside(oo.getShape())) {
+
+                o.recieveImpulse(o.s.subtract(oo.s).unit(20))
+                oo.recieveImpulse(o.s.subtract(oo.s).unit(-20))
+                // o.ttl = 0
+                // oo.ttl = 0
             }  
         })
     })
@@ -88,9 +92,9 @@ function makeAsteroidShape(size){
     points = [new Vec(0, size)]
     while (angle < (2*Math.PI-2)){
         angle += 2*Math.random()
-        console.log(angle);
+        // console.log(angle);
         points.push(points[0].rotate(angle).scale(Math.random()*0.2 + 0.8))
-        console.log(points);
+        // console.log(points);
     }
     return points 
 }
