@@ -101,10 +101,7 @@ class SpaceObject {
     }
     get kineticEnergy() {
         //console.log(this.v)
-        return 1/2*this.mass*((this.v).mag**2)
-    }
-    getPotentialEnergy(g) {
-        return gravitationalPotential(g, this.s)*this.mass
+        return 1/2*this.mass*((this.v).mag()**2)
     }
     calculateGravity(g) {
        // const r = this.s.subtract(g.s)
@@ -117,7 +114,7 @@ class SpaceObject {
     }
     putInOrbit(g) {
         const r = this.s.subtract(g.s)
-        this.v = r.rotate(Math.PI/2).unit.scale(16*Math.sqrt(g.mass/r.mag))
+        this.v = r.rotate(Math.PI/2).unit().scale(16*Math.sqrt(g.mass/r.mag()))
     }
     static makeAsteroidShape(size, points) {
         let angle = 0
