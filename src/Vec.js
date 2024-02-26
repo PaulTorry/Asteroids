@@ -15,7 +15,7 @@ class Vec {
     subtract(s) {
         return new Vec(this.x - s.x, this.y - s.y)
     }
-    mag(m) {
+    get mag() {
         return Math.sqrt(this.x * this.x + this.y * this.y)
     }
     scale(s) {
@@ -27,28 +27,20 @@ class Vec {
     cross(a) {
         return (this.x * a.y) - (a.x * this.y)
     }
-    unit() {
-        return this.scale(1 / this.mag())
+    get unit() {
+        return this.scale(1 / this.mag)
     }
-    theta() {
+    get theta() {
         return (Math.atan2(this.y, this.x) + (2 * Math.PI)) % (2 * Math.PI)
     }
-    cCoords() {
-        return [this.mag(), this.theta()]
+    get cCoords() {
+        return [this.mag, this.theta]
     }
     mid(a) {
         return new Vec((this.x + a.x) / 2, (this.y + a.y) / 2)
     }
     dot(a) {
         return (a.x * this.x + a.y * this.y)
-    }
-    limit(l){
-        return this.copy()
-        if (this.mag() < l) return this.copy()
-        else return this.copy().scale(this.mag() / l)
-    }
-    copy(){
-        return new Vec(this.x, this.y)
     }
     static add(a, b) {
         return a.add(b)

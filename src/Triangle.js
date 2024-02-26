@@ -22,7 +22,7 @@ class Triangle {
   }
   get momentOfInertia() {
     const [aa, bb, cc] = this.vertices
-    return (this.area*((aa.subtract(cc).mag()^2)+(bb.subtract(cc).mag()^2)))/4
+    return (this.area*((aa.subtract(cc).mag^2)+(bb.subtract(cc).mag^2)))/4
   }
 }
 let t1 = new Triangle(new Vec(0, 5), new Vec(5, 0))
