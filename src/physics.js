@@ -21,7 +21,7 @@ document.addEventListener("keydown", (e) => {
         console.log(objects[0].momentOfInertia)
     }
     if (e.key === "o") {
-        objects.forEach((o) => o.putInOrbit(gravityObjects[0]))
+        objects.forEach((o) => {o.v = calculateOrbit(gravityObjects[0], o.s).scale(1)})
     }
 })
 
@@ -51,13 +51,16 @@ function draw() {
         drawArrowRel(o.s, o.v.scale(20))
         ctx.font = "15px Arial";
         ctx.fillStyle = "grey"
-        ctx.fillText(Math.round(o.kineticEnergy), ...o.s)
-        ctx.fillText(Math.round(o.getPotentialEnergy(gravityObjects[0])), o.s.x, o.s.y + 10)
+        const ke = o.kineticEnergy
+        const pe = gravitationalPotential(gravityObjects[0], o.s) * o.mass
+        ctx.fillText(ke.toFixed(0), ...o.s)
+        ctx.fillText(pe.toFixed(0), o.s.x, o.s.y + 10)
+        ctx.fillText((pe+ke).toFixed(0), o.s.x, o.s.y - 10)       
         //drawArrowRel(new Vec(100, 100), o.v.scale(5))
         ctx.strokeStyle = "red"
         drawArrowRel(o.s, o.calculateGravity(gravityObjects[0]).scale(2500))
         ctx.strokeStyle = "black"
-        //drawShape(o.history, true)
+        drawShape(o.history, true)
         //drawArrowRel(new Vec(50 * i, 200), o.v.scale(5))
     }
     )
@@ -116,12 +119,14 @@ function doCollisions(o, oo, p) {
 }
 
 function update(t) {
-    let dt = (t - lastTime) / 50
+    let dt = 0.1 //(t - lastTime) / 50
 
     objects.forEach((o, i) => {
+        o.g = calculateGravity(gravityObjects[0], o.s)
         o.update(dt)
         o.checkBounds(500, 500)
-        o.applyGravity(gravityObjects[0])
+        // o.applyGravity(gravityObjects[0])
+   //     o.g = calculateGravity(gravityObjects[0], o.s)
         if (o.ttl < 0) { objects.splice(i, 1) }
     }
     )
@@ -135,9 +140,9 @@ function update(t) {
     objects[0].accelerate(keyLog)
     draw()
     lastTime = t
-    requestAnimationFrame(update)
+    setTimeout(update, 1)
 }
-requestAnimationFrame(update)
+setTimeout(update, 1)
 
 
 

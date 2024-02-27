@@ -11,3 +11,8 @@ function gravitationalPotential(g, s) {
   const r = s.subtract(g.s)
   return -g.mass / r.mag
 }
+
+function calculateOrbit(g, s) {
+  const r = s.subtract(g.s)
+  return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
+}
