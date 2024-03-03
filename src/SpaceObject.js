@@ -2,7 +2,6 @@ class SpaceObject {
     constructor(s, v, baseShape, theta = 0, ttl = 999999) {
         this.s = s
         this.v = v
-        this.g = new Vec(0, 0)
         this.baseShape = baseShape
         this.theta = theta
         this.omega = 0.00
@@ -12,25 +11,25 @@ class SpaceObject {
         this.historyCooldown = 0
         this.reCenter()
     }
-    update(dt) {
-        this.updateHistory(dt)
+    update(dt, gg) {
         this.ttl -= dt
         this.cooldown -= dt
         this.s = this.s.add(this.v.scale(dt))
         //this.v = this.v.scale(0.995)
         this.theta += this.omega * dt
-        this.v = this.v.add(this.g.scale(dt))
+        this.v = this.v.add(gg.scale(dt))
+        this.updateHistory()
     }
-
-    updateHistory(dt) {
+    updateHistory() {
         if (this.historyCooldown <= 0) {
             this.history.push(this.s)
             this.historyCooldown = 10
-            if (this.history.length > 30) { this.history = this.history.slice(1) }
+            if (this.history.length > 30) {
+                this.history = this.history.slice(1)
+            }
         }
-        this.historyCooldown -= dt
+        this.historyCooldown--
     }
-
     checkBounds(bx, by) {
         // TODO: fix corners
         // const x = this.s.x
@@ -54,7 +53,6 @@ class SpaceObject {
             this.v = this.v.add(this.facing.scale(-0.5))
         }
     }
-
     get shape() {
         return this.baseShape.map((p) => p.rotate(this.theta).add(this.s))
     }
@@ -101,7 +99,6 @@ class SpaceObject {
     }
     get momentOfInertia() {
         let triangles = this.localTriangles
-        //triangles.forEach((c) => console.log(c.momentOfInertia))
         return triangles.reduce((p, c, i, a) => c.momentOfInertia + p, 0)
     }
     get kineticEnergy() {
@@ -110,19 +107,20 @@ class SpaceObject {
     calculateGravity(g) {
         return calculateGravity(g, this.s)
     }
-    applyGravity(g) {
-        this.v = this.v.add(this.calculateGravity(g))
+    //applyGravity(g, dt) {
+        //this.v = this.v.add(this.calculateGravity(g).scale(dt))
+    //}
+    putInOrbit(g) {
+        const r = this.s.subtract(g.s)
+        this.v = r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
     }
-
     static makeAsteroidShape(size, points) {
         let angle = 0
         let p1 = new Vec(0, -size)
         let coords = [p1]
         for (let i = 1; i < points; i++) {
             angle = ((Math.PI * 2) / points) * i
-            //console.log(angle)
             coords.push(p1.rotate(angle).scale(Math.random() * 0.8 + 0.2))
-            //console.log(coords)
         }
         return coords
     }

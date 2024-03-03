@@ -11,24 +11,20 @@ for (const n of grid) {
         objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(15, 10)))
     }
 }
-
 let lastTime = 0
 let keyLog = {}
-
 document.addEventListener("keydown", (e) => {
     keyLog[e.key] = true
     if (e.key === "p") {
         console.log(objects[0].momentOfInertia)
     }
     if (e.key === "o") {
-        objects.forEach((o) => {o.v = calculateOrbit(gravityObjects[0], o.s).scale(1)})
+        objects.forEach((o) => o.putInOrbit(gravityObjects[0]))
     }
 })
-
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
-
 let ctx = canvas.getContext("2d")
-
+console.log("hello", ctx)
 draw()
 
 
@@ -40,22 +36,23 @@ function draw() {
     ctx.beginPath()
 
     function drawShape(s, dontClose) {
-        ctx.moveTo(...s[0])
-        s.forEach((p) => { return ctx.lineTo(...p) })
+        ctx.moveTo(s[0].x, s[0].y)
+        s.forEach((p) => {
+            return ctx.lineTo(p.x, p.y)
+        }
+        )
         if (!dontClose) { ctx.closePath() }
         ctx.stroke()
     }
-
     objects.forEach((o) => drawShape(o.shape))
     objects.forEach((o, i) => {
         drawArrowRel(o.s, o.v.scale(20))
         ctx.font = "15px Arial";
-        ctx.fillStyle = "grey"
-        const ke = o.kineticEnergy
-        const pe = gravitationalPotential(gravityObjects[0], o.s) * o.mass
-        ctx.fillText(ke.toFixed(0), ...o.s)
-        ctx.fillText(pe.toFixed(0), o.s.x, o.s.y + 10)
-        ctx.fillText((pe+ke).toFixed(0), o.s.x, o.s.y - 10)       
+        const ke = Math.round(o.kineticEnergy)
+        const pe = gravitationalPotential(gravityObjects[0], o.s)*o.mass
+        ctx.fillText(ke.toFixed(1), o.s.x, o.s.y)
+        ctx.fillText(pe.toFixed(1), o.s.x, o.s.y + 20)
+        ctx.fillText((ke+pe).toFixed(1), o.s.x-100, o.s.y)
         //drawArrowRel(new Vec(100, 100), o.v.scale(5))
         ctx.strokeStyle = "red"
         drawArrowRel(o.s, o.calculateGravity(gravityObjects[0]).scale(2500))
@@ -67,9 +64,8 @@ function draw() {
     let gridTwo = [50, 100, 150, 200, 250, 300, 350, 400, 450]
     for (const n of gridTwo) {
         for (const m of gridTwo) {
-            const l = calculateGravity(gravityObjects[0], new Vec(n, m)).scale(1000)
-            // ctx.fillText(gravitationalPotential(gravityObjects[0], new Vec(n, m)).toFixed(1), n, m)
-            // drawLineRel(n, m, ...l)
+            //ctx.fillText(gravitationalPotential(gravityObjects[0], new Vec(n, m)).toFixed(1), n, m)
+            //drawLineRel(n, m, ...calculateGravity(gravityObjects[0], new Vec(n, m)).scale(1000))
         }
     }
     drawArrowRel(new Vec(300, 300), objects.map((o) => o.v.scale(o.mass)).reduce(Vec.add).scale(1 / 100))
@@ -103,30 +99,23 @@ function drawArrowRel(a, da) {
     drawLineRel(end.x, end.y, side1.x, side1.y)
     drawLineRel(end.x, end.y, side2.x, side2.y)
 }
-
 function doCollisions(o, oo, p) {
     let collisionDirection = (o.s.subtract(oo.s)).unit
     let mo = o.v.scale(o.mass)
     let moo = oo.v.scale(oo.mass)
     let frameOfReference = (mo.add(moo).scale(1 / (o.mass + oo.mass)))
-
     let impulse = frameOfReference.subtract(o.v).scale(o.mass * 2)
-
     if (impulse.dot(collisionDirection) > 0) {
         o.receiveImpulse(impulse, p)
         oo.receiveImpulse(impulse.scale(-1), p)
     }
 }
-
 function update(t) {
-    let dt = 0.1 //(t - lastTime) / 50
-
+    let dt = (t - lastTime) / 50
     objects.forEach((o, i) => {
-        o.g = calculateGravity(gravityObjects[0], o.s)
-        o.update(dt)
+        o.update(dt, calculateGravity(gravityObjects[0], o.s))
         o.checkBounds(500, 500)
-        // o.applyGravity(gravityObjects[0])
-   //     o.g = calculateGravity(gravityObjects[0], o.s)
+        //o.applyGravity(gravityObjects[0], dt)
         if (o.ttl < 0) { objects.splice(i, 1) }
     }
     )
@@ -140,9 +129,9 @@ function update(t) {
     objects[0].accelerate(keyLog)
     draw()
     lastTime = t
-    setTimeout(update, 1)
+    requestAnimationFrame(update)
 }
-setTimeout(update, 1)
+requestAnimationFrame(update)
 
 
 

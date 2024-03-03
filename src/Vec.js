@@ -3,12 +3,10 @@ class Vec {
         this.x = x
         this.y = y
     }
-
     *[Symbol.iterator]() {
         yield this.x
         yield this.y
     }
-
     add(a) {
         return new Vec(this.x + a.x, this.y + a.y)
     }
