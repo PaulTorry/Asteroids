@@ -114,6 +114,10 @@ class SpaceObject {
         const r = this.s.subtract(g.s)
         this.v = r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
     }
+
+
+
+    
     static makeAsteroidShape(size, points) {
         let angle = 0
         let p1 = new Vec(0, -size)

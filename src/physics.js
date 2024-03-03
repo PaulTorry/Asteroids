@@ -1,4 +1,4 @@
-let canvas = document.getElementById("simulationWindow")
+const dl = new DrawLayer(document.getElementById("simulationWindow").getContext("2d"), "black")
 let objects = [
     new SpaceObject(new Vec(250, 250), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20)),
 ]
@@ -12,6 +12,8 @@ for (const n of grid) {
     }
 }
 let lastTime = 0
+
+
 let keyLog = {}
 document.addEventListener("keydown", (e) => {
     keyLog[e.key] = true
@@ -23,44 +25,26 @@ document.addEventListener("keydown", (e) => {
     }
 })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
-let ctx = canvas.getContext("2d")
-console.log("hello", ctx)
+
+
 draw()
 
-
 function draw() {
-    ctx.fillStyle = "black"
-    ctx.clearRect(0, 0, 500, 500)
-    ctx.strokeRect(0, 0, 500, 500)
+    dl.reset()
 
-    ctx.beginPath()
+    objects.forEach((o) => dl.drawShape(o.shape))
 
-    function drawShape(s, dontClose) {
-        ctx.moveTo(s[0].x, s[0].y)
-        s.forEach((p) => {
-            return ctx.lineTo(p.x, p.y)
-        }
-        )
-        if (!dontClose) { ctx.closePath() }
-        ctx.stroke()
-    }
-    objects.forEach((o) => drawShape(o.shape))
     objects.forEach((o, i) => {
-        drawArrowRel(o.s, o.v.scale(20))
-        ctx.font = "15px Arial";
+        dl.drawArrowRel(o.s, o.v.scale(20))
         const ke = Math.round(o.kineticEnergy)
-        const pe = gravitationalPotential(gravityObjects[0], o.s)*o.mass
-        ctx.fillText(ke.toFixed(1), o.s.x, o.s.y)
-        ctx.fillText(pe.toFixed(1), o.s.x, o.s.y + 20)
-        ctx.fillText((ke+pe).toFixed(1), o.s.x-100, o.s.y)
-        //drawArrowRel(new Vec(100, 100), o.v.scale(5))
-        ctx.strokeStyle = "red"
-        drawArrowRel(o.s, o.calculateGravity(gravityObjects[0]).scale(2500))
-        ctx.strokeStyle = "black"
-        drawShape(o.history, true)
-        //drawArrowRel(new Vec(50 * i, 200), o.v.scale(5))
-    }
-    )
+        const pe = gravitationalPotential(gravityObjects[0], o.s) * o.mass
+        dl.fillText(ke.toFixed(1), o.s.x, o.s.y)
+        dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20)
+        dl.fillText((ke + pe).toFixed(1), o.s.x - 100, o.s.y)
+        dl.drawArrowRel(o.s, o.calculateGravity(gravityObjects[0]).scale(2500), "red")
+        dl.drawShape(o.history, true)
+    })
+
     let gridTwo = [50, 100, 150, 200, 250, 300, 350, 400, 450]
     for (const n of gridTwo) {
         for (const m of gridTwo) {
@@ -68,37 +52,16 @@ function draw() {
             //drawLineRel(n, m, ...calculateGravity(gravityObjects[0], new Vec(n, m)).scale(1000))
         }
     }
-    drawArrowRel(new Vec(300, 300), objects.map((o) => o.v.scale(o.mass)).reduce(Vec.add).scale(1 / 100))
+
+    dl.drawArrowRel(new Vec(300, 300), objects.map((o) => o.v.scale(o.mass)).reduce(Vec.add).scale(1 / 100))
+
     let vectorStart = new Vec(300, 300)
-    ctx.strokeStyle = "grey"
     objects.map((o) => o.v.scale(o.mass / 100)).forEach((v) => {
-        drawArrowRel(vectorStart, v)
+        dl.drawArrowRel(vectorStart, v)
         vectorStart = vectorStart.add(v)
-    }
-    )
-    ctx.strokeStyle = "black"
+    })
 }
 
-function drawLineAbs(x1, y1, x2, y2) {
-    ctx.beginPath()
-    ctx.moveTo(x1, y1)
-    ctx.lineTo(x2, y2)
-    ctx.closePath()
-    ctx.stroke()
-}
-
-function drawLineRel(x, y, dx, dy) {
-    drawLineAbs(x, y, x + dx, y + dy)
-}
-
-function drawArrowRel(a, da) {
-    const end = a.add(da)
-    const side1 = da.unit.rotate(Math.PI * 3 / 4).scale(10)
-    const side2 = da.unit.rotate(Math.PI * 5 / 4).scale(10)
-    drawLineRel(a.x, a.y, da.x, da.y)
-    drawLineRel(end.x, end.y, side1.x, side1.y)
-    drawLineRel(end.x, end.y, side2.x, side2.y)
-}
 function doCollisions(o, oo, p) {
     let collisionDirection = (o.s.subtract(oo.s)).unit
     let mo = o.v.scale(o.mass)
