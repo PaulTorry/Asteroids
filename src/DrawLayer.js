@@ -9,14 +9,15 @@ class DrawLayer {
     reset(){
         this.ctx.clearRect(0, 0, 500, 500)
         this.ctx.strokeRect(0, 0, 500, 500)
-        this.ctx.beginPath()
+        // this.ctx.beginPath()
         this.ctx.fillStyle = this.defaultCol
         this.ctx.strokeStyle = this.defaultCol
         this.ctx.font = this.defaultFont;
-        this.ctx.stroke()
+        // this.ctx.stroke()
     }
 
     drawShape(s, dontClose) {
+        this.ctx.beginPath()
         this.ctx.moveTo(s[0].x, s[0].y)
         s.forEach((p) => {
             return this.ctx.lineTo(p.x, p.y)
@@ -30,7 +31,7 @@ class DrawLayer {
         this.ctx.beginPath()
         this.ctx.moveTo(x1, y1)
         this.ctx.lineTo(x2, y2)
-        this. ctx.closePath()
+        // this.ctx.closePath()
         this.ctx.stroke()
     }
     
@@ -45,7 +46,7 @@ class DrawLayer {
         const side2 = da.unit.rotate(Math.PI * 5 / 4).scale(10)
         this.drawLineRel(a.x, a.y, da.x, da.y)
         this.drawLineRel(end.x, end.y, side1.x, side1.y)
-        this. drawLineRel(end.x, end.y, side2.x, side2.y)
+        this.drawLineRel(end.x, end.y, side2.x, side2.y)
         this.ctx.strokeStyle = this.defaultCol
     }
 

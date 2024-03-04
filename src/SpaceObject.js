@@ -20,6 +20,7 @@ class SpaceObject {
         this.v = this.v.add(gg.scale(dt))
         this.updateHistory()
     }
+
     updateHistory() {
         if (this.historyCooldown <= 0) {
             this.history.push(this.s)
@@ -30,6 +31,7 @@ class SpaceObject {
         }
         this.historyCooldown--
     }
+
     checkBounds(bx, by) {
         // TODO: fix corners
         // const x = this.s.x
@@ -42,17 +44,25 @@ class SpaceObject {
         if (this.s.y > by) { this.v = new Vec(this.v.x, Math.min(0, this.v.y)) }
         if (this.s.y < 0) { this.v = new Vec(this.v.x, Math.max(0, this.v.y)) }
     }
-    accelerate(keys) {
-        if (keys["ArrowUp"]) this.v = this.v.add(this.facing.scale(0.35))
-        if (keys["ArrowDown"]) this.v = this.v.add(this.facing.scale(-1).scale(0.35))
-        if (keys["ArrowRight"]) this.theta += 0.05, this.omega = 0
-        if (keys["ArrowLeft"]) this.theta -= 0.05, this.omega = 0
-        if (keys[" "] && this.cooldown < 0) {
+
+    accelerate(keys, dt = 1) {
+        if (keys["ArrowUp"]) this.thrust(1, 0, dt)
+        if (keys["ArrowDown"]) this.thrust(-1, 0, dt)
+        if (keys["ArrowRight"]) this.thrust(0, 1, dt)
+        if (keys["ArrowLeft"]) this.thrust(0, -1, dt)
+        if (keys[" "] && this.cooldown < 0) this.fireBullet()
+    }
+    thrust(f = 0, r = 0, dt = 1){
+        this.v = this.v.add(this.facing.scale(f*dt))
+        this.theta += 0.2*r*dt, this.omega = 0
+    }
+
+    fireBullet(){
             this.cooldown = 30
             objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(5).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 200))
             this.v = this.v.add(this.facing.scale(-0.5))
-        }
     }
+
     get shape() {
         return this.baseShape.map((p) => p.rotate(this.theta).add(this.s))
     }
@@ -104,16 +114,17 @@ class SpaceObject {
     get kineticEnergy() {
         return 1 / 2 * this.mass * ((this.v).mag ** 2)
     }
-    calculateGravity(g) {
-        return calculateGravity(g, this.s)
-    }
+    // calculateGravity(g) {
+    //     return calculateGravity(g, this.s)
+    // }
     //applyGravity(g, dt) {
         //this.v = this.v.add(this.calculateGravity(g).scale(dt))
     //}
-    putInOrbit(g) {
-        const r = this.s.subtract(g.s)
-        this.v = r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
-    }
+
+    // putInOrbit(g) {
+    //     const r = this.s.subtract(g.s)
+    //     this.v = r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
+    // }
 
 
 

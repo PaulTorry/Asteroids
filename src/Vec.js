@@ -43,4 +43,7 @@ class Vec {
     static add(a, b) {
         return a.add(b)
     }
+    static dir(){
+        return new Vec(0, -1).rotate(this.theta)
+    }
 }
