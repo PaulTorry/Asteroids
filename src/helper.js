@@ -11,11 +11,19 @@ function makeArray(s,i,n){
 function arrayPairs(arr) {
   return arr.map((v, i, a) => [a.at(i - 1), a.at(i)])
 }
-function calculateGravity(g, s) {
-  const r = s.subtract(g.s)
-  //return r.unit.scale(-g.mass/(Math.max(r.mag^2, 5)))
-  return r.unit.scale(-g.mass / r.mag ** 2)
+function calculateGravity(gg, s) {
+
+  function calc (g){
+    const r = s.subtract(g.s)
+    if(r.mag < 1) return new Vec(0,0)
+    return r.unit.scale(-g.mass / r.mag ** 2)
+  }
+
+  return  gg.reduce((p, c) => p.add(calc(c, s)), new Vec(0,0)) 
 }
+
+
+
 function gravitationalPotential(g, s) {
   const r = s.subtract(g.s)
   return -g.mass / r.mag

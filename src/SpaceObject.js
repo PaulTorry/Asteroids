@@ -1,5 +1,5 @@
 class SpaceObject {
-    constructor(s, v, baseShape, theta = 0, ttl = 999999) {
+    constructor(s, v, baseShape, theta = 0, ttl = 999999, density = 1) {
         this.s = s
         this.v = v
         this.baseShape = baseShape
@@ -9,6 +9,7 @@ class SpaceObject {
         this.cooldown = 0
         this.history = [this.s]
         this.historyCooldown = 0
+        this.density = density
         this.reCenter()
     }
     update(dt, gg) {
@@ -59,7 +60,7 @@ class SpaceObject {
 
     fireBullet(){
             this.cooldown = 30
-            objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(5).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 200))
+            objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(5).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 20, -100))
             this.v = this.v.add(this.facing.scale(-0.5))
     }
 
@@ -95,7 +96,7 @@ class SpaceObject {
     }
     get mass() {
         let triangles = this.localTriangles
-        return triangles.reduce((p, c, i, a) => p + c.area, 0)
+        return triangles.reduce((p, c, i, a) => p + c.area, 0) * this.density
     }
     get centerOfMass() {
         let triangles = this.localTriangles

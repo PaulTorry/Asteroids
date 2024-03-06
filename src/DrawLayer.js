@@ -16,7 +16,8 @@ class DrawLayer {
         // this.ctx.stroke()
     }
 
-    drawShape(s, dontClose) {
+    drawShape(s, dontClose, col = this.defaultCol) {
+        this.ctx.strokeStyle = col
         this.ctx.beginPath()
         this.ctx.moveTo(s[0].x, s[0].y)
         s.forEach((p) => {
@@ -25,6 +26,7 @@ class DrawLayer {
         )
         if (!dontClose) { this.ctx.closePath() }
         this.ctx.stroke()
+        this.ctx.strokeStyle = this.defaultCol
     }
 
      drawLineAbs(x1, y1, x2, y2) {

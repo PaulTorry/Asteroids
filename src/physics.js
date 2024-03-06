@@ -1,11 +1,12 @@
 const dl = new DrawLayer(document.getElementById("simulationWindow").getContext("2d"), "black")
 let objects = [
-    new SpaceObject(new Vec(250, 250), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20)),
+    new SpaceObject(new Vec(250, 250), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, 1),
 ]
 let gravityObjects = [
-    { s: new Vec(250, 250), mass: 300 }
+    { s: new Vec(250, 250), mass: 300 },
+   { s: new Vec(100, 100), mass: 300 }
 ]
-let grid = [100]
+let grid = [100, 200, 300]
 for (const n of grid) {
     for (const m of grid) {
         objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(15, 10)))
@@ -37,12 +38,12 @@ function draw() {
     objects.forEach((o, i) => {
         dl.drawArrowRel(o.s, o.v.scale(20))
         const ke = Math.round(o.kineticEnergy)
-        const pe = gravitationalPotential(gravityObjects[0], o.s) * o.mass
+        // const pe = gravitationalPotential(objects, o.s) * o.mass
         dl.fillText(ke.toFixed(1), o.s.x, o.s.y)
-        dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20)
-        dl.fillText((ke + pe).toFixed(1), o.s.x - 100, o.s.y)
-        dl.drawArrowRel(o.s, calculateGravity(gravityObjects[0], o.s).scale(2500), "red")
-        dl.drawShape(o.history, true)
+        // dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20)
+        // dl.fillText((ke + pe).toFixed(1), o.s.x - 100, o.s.y)
+        dl.drawArrowRel(o.s, calculateGravity(objects, o.s).scale(250), "red")
+        dl.drawShape(o.history, true, "lightgrey")
     })
 
     let gridTwo = [50, 100, 150, 200, 250, 300, 350, 400, 450]
@@ -74,9 +75,11 @@ function doCollisions(o, oo, p) {
     }
 }
 function update(t) {
-    let dt = 0.02 //(t - lastTime) / 50
+    let dt = 0.2 //(t - lastTime) / 50
     objects.forEach((o, i) => {
-        o.update(dt, calculateGravity(gravityObjects[0], o.s))
+        //  let grav = objects.reduce((p, c) => c==o?p.add(calculateGravity(c, o.s)):p, new Vec(0,0)) 
+        //  console.log(grav);
+        o.update(dt, calculateGravity(objects, o.s))
         o.checkBounds(500, 500)
         //o.applyGravity(gravityObjects[0], dt)
         if (o.ttl < 0) { objects.splice(i, 1) }
