@@ -1,4 +1,5 @@
 //let canvas = document.getElementById("simulationWindow")
+console.log(split([1,2,3,4,5,6], 2, 5));
 const dl = new DrawLayer(document.getElementById("simulationWindow").getContext("2d"), "white", "black", "white")
 let objects = [
     new SpaceObject(new Vec(250, 250), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20)),
@@ -9,7 +10,7 @@ let gravityObjects = [
 let grid = [100]
 for (const n of grid) {
     for (const m of grid) {
-        objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(15, 10)))
+        objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(35, 10)))
     }
 }
 let lastTime = 0
@@ -24,6 +25,7 @@ document.addEventListener("keydown", (e) => {
     }
 })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
+objects.forEach(o => console.log(o.mass))
 //let ctx = canvas.getContext("2d")
 //console.log("hello", ctx)
 draw()
@@ -113,13 +115,13 @@ function doCollisions(o, oo, p) {
     }
 }
 function updatePhysics (dt) {
-    objects.forEach((o, i) => {
-        o.update(dt, calculateGravity(gravityObjects[0], o.s))
-        o.checkBounds(500, 500)
-        //o.applyGravity(gravityObjects[0], dt)
-        if (o.ttl < 0) { objects.splice(i, 1) }
-    }
-    )
+    // objects.forEach((o, i) => {
+    //     o.update(dt, calculateGravity(gravityObjects[0], o.s))
+    //     o.checkBounds(500, 500)
+    //     //o.applyGravity(gravityObjects[0], dt)
+    //     if (o.ttl < 0) { objects.splice(i, 1) }
+    // }
+    // )
     objects.forEach((o, i) => {
         objects.forEach((oo, ii) => {
             if (o.isOneInside(oo.shape) && o != oo) {
@@ -127,6 +129,13 @@ function updatePhysics (dt) {
             }
         })
     })
+    objects.forEach((o, i) => {
+        o.update(dt, calculateGravity(gravityObjects[0], o.s))
+        o.checkBounds(500, 500)
+        //o.applyGravity(gravityObjects[0], dt)
+        if (o.ttl < 0) { objects.splice(i, 1) }
+    }
+    )
 }
 function update(t) {
     let dt = 0.0002 //(t - lastTime) / 50 //fix

@@ -1,10 +1,10 @@
 class SpaceObject {
-    constructor(s, v, baseShape, theta = 0, ttl = 999999) {
+    constructor(s, v, baseShape, theta = 0, ttl = 999999, omega = 0) {
         this.s = s
         this.v = v
         this.baseShape = baseShape
         this.theta = theta
-        this.omega = 0.00
+        this.omega = omega
         this.ttl = ttl
         this.cooldown = 0
         this.history = [this.s]
@@ -37,10 +37,10 @@ class SpaceObject {
         // const y = this.s.y
         // const yy = (y + by) % by
         // this.s = new Vec(xx, yy)
-        if (this.s.x > bx) { this.v = new Vec(Math.min(0, this.v.x), this.v.y) }
-        if (this.s.x < 0) { this.v = new Vec(Math.max(0, this.v.x), this.v.y) }
-        if (this.s.y > by) { this.v = new Vec(this.v.x, Math.min(0, this.v.y)) }
-        if (this.s.y < 0) { this.v = new Vec(this.v.x, Math.max(0, this.v.y)) }
+        if (this.s.x > bx -20) { this.v = new Vec(Math.min(0, this.v.x), this.v.y) }
+        if (this.s.x-20 < 0) { this.v = new Vec(Math.max(0, this.v.x), this.v.y) }
+        if (this.s.y > by -20) { this.v = new Vec(this.v.x, Math.min(0, this.v.y)) }
+        if (this.s.y-20 < 0) { this.v = new Vec(this.v.x, Math.max(0, this.v.y)) }
     }
     accelerate(keys) {
         if (keys["ArrowUp"]) this.v = this.v.add(this.facing.scale(0.35))
@@ -48,8 +48,8 @@ class SpaceObject {
         if (keys["ArrowRight"]) this.theta += 0.05, this.omega = 0
         if (keys["ArrowLeft"]) this.theta -= 0.05, this.omega = 0
         if (keys[" "] && this.cooldown < 0) {
-            this.cooldown = 30
-            objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(5).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 200))
+            this.cooldown = 1
+            objects.push(new SpaceObject(this.s.add(this.facing.scale(40)), this.facing.scale(5).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 5))
             this.v = this.v.add(this.facing.scale(-0.5))
         }
     }
@@ -65,7 +65,6 @@ class SpaceObject {
     isInside(p) {
         let triangles = this.triangles
         return !triangles.every(t => !t.isInside(p))
-
     }
     whichOneIsInside(a) {
         return a.filter(p => this.isInside(p))[0]
@@ -80,8 +79,43 @@ class SpaceObject {
         return arrayPairs(this.baseShape).map((v, i, a) => new Triangle(v[0], v[1]))
     }
     receiveImpulse(j, loc = this.s) {
+        let relLoc = loc.subtract(this.s).rotate(-this.theta)
+        let closest = this.findClosestPoint(relLoc)
+        // this.baseShape[closest] = this.baseShape[closest].scale(0.5)
+        this.reCenter()
+        if(j.mag < 100000){this.baseShape[closest] = this.baseShape[closest].scale(0.9)}
+        else if (this.mass < 500) { this.ttl = 0 }
+        else if (this.baseShape[closest].mag < 100) { 
+            // console.log("split");
+            this.ttl = 0
+            // objects.push(new SpaceObject(this.s, this.v, SpaceObject.makeAsteroidShape(200, 7), this.theta, 20))
+            let opposite = this.findClosestPoint(relLoc.scale(-1))
+            console.log(closest, opposite);
+            console.log(...[6, 2].sort());
+            const [a, b] = split(this.baseShape, ...[closest, opposite].sort())
+            console.log(a,b)
+             objects.push(new SpaceObject(new Vec(300, 100), this.v, a, this.theta, 999999, this.omega))
+             objects.push(new SpaceObject(new Vec(100, 300), this.v, b, this.theta, 999999, this.omega))
+
+            // objects.push(new SpaceObject(this.s, this.v, a, this.theta, 999999, 0))
+            // objects.push(new SpaceObject(this.s, this.v, b, this.theta, 999999, 0))
+
+        }
+        else{ this.baseShape[closest] = this.baseShape[closest].scale(0.5)}
         this.v = this.v.add(j.scale(1 / this.mass))
         this.omega = loc.subtract(this.s).cross(j) / (this.momentOfInertia * 100)
+       // objects.push(new SpaceObject(this.s, this.v, SpaceObject.makeAsteroidShape(20, 7), this.theta, 200))
+    }
+    // sufferDamage(j, loc = this.s){
+
+    // }
+    findClosestPoint(relLoc, side = 1) {
+        // let relLoc = loc.subtract(this.s).rotate(-this.theta).scale(side)
+        let pints = this.baseShape.map((c, i) => [i, Math.abs(c.theta - relLoc.theta)])
+        // console.log(pints);
+        let ans = pints.reduce((c, p, i) => c[1] < p[1] ? c : p, [-1, 999])
+        return ans[0]
+        //  pints.map((c, p, i) => i[1] < pints[p][1]?i:p)
     }
     get mass() {
         let triangles = this.localTriangles
@@ -105,10 +139,10 @@ class SpaceObject {
         return 1 / 2 * this.mass * ((this.v).mag ** 2)
     }
     //calculateGravity(g) {
-        //return calculateGravity(g, this.s)
-   // }
+    //return calculateGravity(g, this.s)
+    // }
     //applyGravity(g, dt) {
-        //this.v = this.v.add(this.calculateGravity(g).scale(dt))
+    //this.v = this.v.add(this.calculateGravity(g).scale(dt))
     //}
     // putInOrbit(g) {
     //     const r = this.s.subtract(g.s)
