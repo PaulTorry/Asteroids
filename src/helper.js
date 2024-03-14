@@ -15,5 +15,5 @@ function putInOrbit(g, s) {
 }
 function split(a, si, fi) {
   let aa = a.concat(a)
-  return [aa.slice(si, fi+1), aa.slice(fi, aa.length+si+1)]
+  return [aa.slice(si, fi + 1), aa.slice(fi, a.length + si + 1)]
 }

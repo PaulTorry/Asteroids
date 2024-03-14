@@ -4,12 +4,12 @@ let objects = [
     new SpaceObject(new Vec(250, 250), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
 ]
 let gravityObjects = [
-    { s: new Vec(250, 250), mass: 300 }
+    { s: new Vec(250, 250), mass: 3 }
 ]
 let grid = [100]
 for (const n of grid) {
     for (const m of grid) {
-        objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(52, 10), 0, 99999))
+        objects.push(new SpaceObject(new Vec(m, n), new Vec(0, 0), SpaceObject.makeAsteroidShape(52, 10), 0, 99999))
     }
 }
 let lastTime = 0
@@ -129,7 +129,7 @@ function updatePhysics (dt) {
     })
 }
 function update(t) {
-    let itt = 100
+    let itt = 1
     let dt = 0.05/itt //(t - lastTime) / 50 //fix
     for(let i = 0; i<itt; i++) { updatePhysics(dt) }
     

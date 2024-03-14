@@ -1,5 +1,6 @@
 class SpaceObject {
     constructor(s, v, baseShape, theta = 0, ttl = 999999, type = "asteroid") {
+        this.age = 0
         this.s = s
         this.v = v
         this.baseShape = baseShape
@@ -14,6 +15,7 @@ class SpaceObject {
     }
     update(dt, gg) {
         this.ttl -= dt
+        this.age += dt
         this.cooldown -= dt
         this.s = this.s.add(this.v.scale(dt))
         //this.v = this.v.scale(0.995)
@@ -83,7 +85,7 @@ class SpaceObject {
     receiveImpulse(j, loc = this.s) {
         //p.rotate(this.theta).add(this.s))
         const reloc = loc.subtract(this.s).rotate(-this.theta)
-        this.v = this.v.add(j.scale(1 / this.mass))
+    //this.v = this.v.add(j.scale(1 / this.mass))
         this.omega = loc.subtract(this.s).cross(j) / (this.momentOfInertia * 100)
         const closest = this.findClosestPoint(reloc)
         if(this.type === "ship") {
@@ -92,12 +94,16 @@ class SpaceObject {
         if(this.type === "bullet") {
             this.ttl = 0
         }
-        if(this.type === "asteroid") {
+        if(this.type === "asteroid" && this.age > 10) {
        // this.baseShape[closest] = this.baseShape[closest].subtract(this.baseShape[closest].unit.scale(10))
        this.ttl = 0
        const opposite = this.findClosestPoint(reloc.scale(-1))
-       console.log(...[closest, opposite].sort(), split(this.baseShape, ...[closest, opposite].sort()))
-       objects.push(new SpaceObject(this.s, this.v, split(this.baseShape, ...[closest, opposite].sort())))
+       const [a,b] = split(this.baseShape, ...[closest, opposite].sort())
+    //    console.log(closest, opposite, this.baseShape, a, b);
+       //console.log(...[closest, opposite].sort(), split(this.baseShape, ...[closest, opposite].sort()), a)
+       objects.push(new SpaceObject(this.s, this.v.add(j.unit.rotate(-Math.PI/2).scale(20)), [...a, new Vec(0,0)]))
+       objects.push(new SpaceObject(this.s, this.v.add(j.unit.rotate(Math.PI/2).scale(20)), [...b, new Vec(0,0)]))
+
     }
     }
     findClosestPoint (reloc) {
@@ -111,6 +117,7 @@ class SpaceObject {
     }
     get centerOfMass() {
         let triangles = this.localTriangles
+       // console.log(triangles.map(c => c.vertices));
         let weightedVec = triangles.reduce((p, c, i, a) => p.add(c.midPoint.scale(c.area)), new Vec(0, 0))
         return weightedVec.scale(1 / this.mass)
     }
