@@ -1,5 +1,5 @@
 class SpaceObject {
-    constructor(s, v, baseShape, theta = 0, ttl = 999999, type = "asteroid") {
+    constructor(s, v, baseShape, theta = 0, ttl = 999999, type = "asteroid", density = 1) {
         this.s = s
         this.v = v
         this.baseShape = baseShape
@@ -11,6 +11,7 @@ class SpaceObject {
         this.historyCooldown = 0
         this.type = type
         this.age = 0
+        this.density = density
         this.reCenter()
     }
     update(dt, gg) {
@@ -52,7 +53,7 @@ class SpaceObject {
         if (keys["ArrowLeft"]) this.theta -= 0.05, this.omega = 0
         if (keys[" "] && this.cooldown < 0) {
             this.cooldown = 5
-            objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(10).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 200, "bullet"))
+            objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(10).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 200, "bullet", -1000))
             this.v = this.v.add(this.facing.scale(-0.5))
         }
     }
@@ -125,7 +126,7 @@ class SpaceObject {
     }
     get mass() {
         let triangles = this.localTriangles
-        return triangles.reduce((p, c, i, a) => p + c.area, 0)
+        return triangles.reduce((p, c, i, a) => p + c.area, 0) 
     }
     get centerOfMass() {
         let triangles = this.localTriangles

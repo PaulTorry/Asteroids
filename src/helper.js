@@ -3,20 +3,34 @@ function arrayPairs(arr) {
 }
 function calculateGravity(g, s) {
   const r = s.subtract(g.s)
-  return r.unit.scale(-g.mass / r.mag ** 2)
+  if(g.s.subtract(s).mag < 10) return new Vec(0,0)
+  return r.unit.scale(-g.mass * G / r.mag ** 2)
 }
-function calculateGravities (a,s) {
+function calculateGravities (a, s) {
   return a.reduce((p,c) => p.add(calculateGravity(c, s)), new Vec(0,0))
 }
 function gravitationalPotential(g, s) {
   const r = s.subtract(g.s)
-  return -g.mass / r.mag
+  if(r < 10) return 0
+  return -g.mass * G / r.mag
 }
+function gravitationalPotentials(a, s) {
+  return a.reduce((p, c) => p + gravitationalPotential(c, s),  0)
+}
+
 function putInOrbit(g, s) {
   const r = s.subtract(g.s)
   return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
 }
+
 function split(a, si, fi) {
   let aa = a.concat(a)
   return [aa.slice(si, fi+1), aa.slice(fi, a.length+si+1)]
+}
+
+function findBarycentre(a){
+  let direction = a.reduce((p, c) => p.add(c.s.scale(c.mass)), new Vec(0, 0))
+  let totalMass = a.reduce((p, c) => p + c.mass, 0)
+  console.log(direction, totalMass);
+  return {s: direction.scale(1/totalMass), mass:totalMass}
 }
