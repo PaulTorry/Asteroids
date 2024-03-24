@@ -59,12 +59,12 @@ function draw() {
         dl.drawArrowRel(o.s, o.v.scale(20))
         // ctx.font = "15px Arial";
         const ke = Math.round(o.kineticEnergy)
-        const pe = gravitationalPotentials(objects, o.s)*o.mass
-        if(debugMode) {
-        dl.fillText(ke.toFixed(1), o.s.x, o.s.y, "red")
-        dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20, "blue")
-        dl.fillText((ke+pe).toFixed(1), o.s.x-100, o.s.y, "green")
-                                    dl.drawArrowRel(o.s, calculateGravities(objects, o.s).scale(2500), "green")
+        const pe = gravitationalPotentials(objects, o.s) * o.mass
+        if (debugMode) {
+            dl.fillText(ke.toFixed(1), o.s.x, o.s.y, "red")
+            dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20, "blue")
+            dl.fillText((ke + pe).toFixed(1), o.s.x - 100, o.s.y, "green")
+            dl.drawArrowRel(o.s, calculateGravities(objects, o.s).scale(2500), "green")
         }
         //dl.drawArrowRel(new Vec(100, 100), o.v.scale(5))
         //ctx.strokeStyle = "red"
@@ -123,7 +123,7 @@ function doCollisions(o, oo, p) {
         oo.receiveImpulse(impulse.scale(-1), p)
     }
 }
-function updatePhysics (dt) {
+function updatePhysics(dt) {
     objects.forEach((o, i) => {
         o.update(dt, calculateGravities(objects, o.s))   // 
         o.checkBounds(500, 500)
@@ -141,9 +141,9 @@ function updatePhysics (dt) {
 }
 function update(t) {
     let itt = 5
-    let dt = 0.05/itt //(t - lastTime) / 50 //fix
-    for(let i = 0; i<itt; i++) { updatePhysics(dt) }
-    
+    let dt = 0.05 / itt //(t - lastTime) / 50 //fix
+    for (let i = 0; i < itt; i++) { updatePhysics(dt) }
+
     // objects.forEach((o, i) => {
     //     o.update(dt, calculateGravity(gravityObjects[0], o.s))
     //     o.checkBounds(500, 500)

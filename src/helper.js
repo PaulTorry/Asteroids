@@ -3,19 +3,19 @@ function arrayPairs(arr) {
 }
 function calculateGravity(g, s) {
   const r = s.subtract(g.s)
-  if(g.s.subtract(s).mag < 10) return new Vec(0,0)
+  if (g.s.subtract(s).mag < 10) return new Vec(0, 0)
   return r.unit.scale(-g.mass * G / r.mag ** 2)
 }
-function calculateGravities (a, s) {
-  return a.reduce((p,c) => p.add(calculateGravity(c, s)), new Vec(0,0))
+function calculateGravities(a, s) {
+  return a.reduce((p, c) => p.add(calculateGravity(c, s)), new Vec(0, 0))
 }
 function gravitationalPotential(g, s) {
   const r = s.subtract(g.s)
-  if(r < 10) return 0
+  if (r < 10) return 0
   return -g.mass * G / r.mag
 }
 function gravitationalPotentials(a, s) {
-  return a.reduce((p, c) => p + gravitationalPotential(c, s),  0)
+  return a.reduce((p, c) => p + gravitationalPotential(c, s), 0)
 }
 
 function putInOrbit(g, s) {
@@ -25,12 +25,12 @@ function putInOrbit(g, s) {
 
 function split(a, si, fi) {
   let aa = a.concat(a)
-  return [aa.slice(si, fi+1), aa.slice(fi, a.length+si+1)]
+  return [aa.slice(si, fi + 1), aa.slice(fi, a.length + si + 1)]
 }
 
-function findBarycentre(a){
+function findBarycentre(a) {
   let direction = a.reduce((p, c) => p.add(c.s.scale(c.mass)), new Vec(0, 0))
   let totalMass = a.reduce((p, c) => p + c.mass, 0)
   console.log(direction, totalMass);
-  return {s: direction.scale(1/totalMass), mass:totalMass}
+  return { s: direction.scale(1 / totalMass), mass: totalMass }
 }
