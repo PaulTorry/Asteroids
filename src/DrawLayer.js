@@ -24,7 +24,7 @@ class DrawLayer {
         this.ctx.stroke()
         this.ctx.strokeStyle = this.defaultStroke
     }
-    fillText(text, x, y, col = defaultText) {
+    fillText(text, x, y, col = this.defaultText) {
         this.ctx.fillStyle = col
         this.ctx.fillText(text, x, y)
         this.ctx.fillStyle = this.defaultText
@@ -33,12 +33,14 @@ class DrawLayer {
         this.drawLineAbs(x, y, x + dx, y + dy)
     }
     drawArrowRel(a, da, col = "white") {
+        this.ctx.strokeStyle = col
         const end = a.add(da)
         const side1 = da.unit.rotate(Math.PI * 3 / 4).scale(10)
         const side2 = da.unit.rotate(Math.PI * 5 / 4).scale(10)
         this.drawLineRel(a.x, a.y, da.x, da.y, col)
         this.drawLineRel(end.x, end.y, side1.x, side1.y, col)
         this.drawLineRel(end.x, end.y, side2.x, side2.y, col)
+        this.ctx.strokeStyle = this.defaultStroke
     }
     drawShape(s, dontClose, col = this.defaultStroke) {
         this.ctx.strokeStyle = col

@@ -11,7 +11,7 @@ function calculateGravities(a, s) {
 }
 function gravitationalPotential(g, s) {
   const r = s.subtract(g.s)
-  if (r < 10) return 0
+  if (r.mag < 10) return 0
   return -g.mass * G / r.mag
 }
 function gravitationalPotentials(a, s) {
