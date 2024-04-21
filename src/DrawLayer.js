@@ -1,19 +1,21 @@
 class DrawLayer {
-    constructor(ctx, defaultStroke = "black", defaultFill = "white", defaultText = "black", height = 800, width = 800) {
+    constructor(ctx, defaultStroke = "black", defaultFill = "white", defaultText = "black") {
         this.ctx = ctx
         this.defaultStroke = defaultStroke
         this.defaultFill = defaultFill
         this.defaultText = defaultText
-        this.height = height
-        this.width = width
-        this.reset()
+        // this.screenSize = screenSize
+        // this.viewCentre = viewCentre
+        // // this.height = height
+        // // this.width = width
+        // this.reset()
     }
     reset() {
         this.ctx.fillStyle = this.defaultFill
         this.ctx.strokeStyle = this.defaultStroke
-        this.ctx.clearRect(0, 0, this.width, this.height)
-        this.ctx.fillRect(0, 0, this.width, this.height)
-        this.ctx.strokeRect(0, 0, this.width, this.height)
+        this.ctx.clearRect(0, 0, ...screenSize.add(new Vec(40,40)))
+        this.ctx.fillRect(0, 0, ...screenSize)
+        this.ctx.strokeRect(0, 0, ...screenSize.add(new Vec(20,20)))
         //ctx.beginPath()
         this.ctx.font = "15px Arial";
     }
@@ -42,12 +44,12 @@ class DrawLayer {
         this.drawLineRel(end.x, end.y, side1.x, side1.y, col)
         this.drawLineRel(end.x, end.y, side2.x, side2.y, col)
     }
-    drawShape(s, dontClose, col = this.defaultStroke) {
+    drawShape(s, dontClose, col = this.defaultStroke, offset = new Vec(0,0)) {
         this.ctx.strokeStyle = col
         this.ctx.beginPath()
-        this.ctx.moveTo(s[0].x, s[0].y)
+        this.ctx.moveTo(...s[0].add(offset))
         s.forEach((p) => {
-            return this.ctx.lineTo(p.x, p.y)
+            return this.ctx.lineTo(...p.add(offset))
         }
         )
         if (!dontClose) { this.ctx.closePath() }

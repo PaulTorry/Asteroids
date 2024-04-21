@@ -30,3 +30,10 @@ function split(a, si, fi) {
   let aa = a.concat(a)
   return [aa.slice(si, fi + 1), aa.slice(fi, a.length + si + 1)]
 }
+
+function findBarycentre(a) {
+  let direction = a.reduce((p, c) => p.add(c.s.scale(c.mass)), new Vec(0, 0))
+  let totalMass = a.reduce((p, c) => p + c.mass, 0)
+  console.log(direction, totalMass);
+  return { s: direction.scale(1 / totalMass), mass: totalMass }
+}

@@ -1,8 +1,10 @@
 //let canvas = document.getElementById("simulationWindow")
 const dl = new DrawLayer(document.getElementById("simulationWindow").getContext("2d"), "white", "black", "white")
 const G = 1
-let height = 800
-let width = 800
+// let height = 800
+// let width = 800 
+let screenSize = new Vec(800,800)
+//let screenCentre = new Vec(0,0)
 let objects = [
     new SpaceObject(new Vec(500, 500), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
 ]
@@ -27,6 +29,7 @@ document.addEventListener("keydown", (e) => {
     }
     if (e.key === "o") {
         //objects.forEach((o) => o.v = putInOrbit(gravityObjects[0], o.s))
+        objects.forEach((o) => o.v = putInOrbit(findBarycentre(objects), o.s))
     }
     if (e.key === "d") {
         debugMode = (debugMode + 1) % 5
@@ -38,12 +41,13 @@ draw()
 
 
 function draw() {
+    let centre = v => v.scale(-1).add(screenSize.scale(0.5))
     dl.reset()
     objects.forEach((o, i) => {
         let gb = Math.round(255/20*o.health)
         let col = o.health<20 ? "rgb(255," + gb + "," + gb + ")" : "white"
         //console.log(gb, col)
-        dl.drawShape(o.shape, false, col)
+        dl.drawShape(o.shape, false, col, centre(objects[0].s))
         if (debugMode === 1) {
             dl.drawShape(o.history, true, "white")
             dl.drawArrowRel(o.s, o.v.scale(20))
@@ -90,7 +94,7 @@ function doCollisions(o, oo, p) {
 function updatePhysics(dt) {
     objects.forEach((o, i) => {
         o.update(dt, calculateGravities(objects, o.s))
-        o.checkBounds(width, height)
+        o.checkBounds(screenSize)
         //o.applyGravity(gravityObjects[0], dt)
         if (o.ttl < 0) { objects.splice(i, 1) }
     }
