@@ -30,3 +30,14 @@ function split(a, si, fi) {
   let aa = a.concat(a)
   return [aa.slice(si, fi + 1), aa.slice(fi, a.length + si + 1)]
 }
+function generateGridNumbers(interval, start, finish){
+  let s = Math.floor(start/interval)
+  let f = Math.ceil(finish/interval)
+  let grid = [...Array(1+f-s).keys()].map(x => x+s).map(x => x*interval)
+  console.log(s,f,grid);
+  return grid
+}
+
+generateGridNumbers(10, 30, 111)
+generateGridNumbers(3, 30, 90)
+generateGridNumbers(5, 32, 89)

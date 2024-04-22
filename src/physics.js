@@ -4,7 +4,7 @@ let screenSize = new Vec(800, 800)
 let objects = [
     new SpaceObject(new Vec(350, 350), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
 ]
-let grid = [200, 400, 600]
+let grid = generateGridNumbers(200, 300, screenSize.x -300)
 for (const n of grid) {
     for (const m of grid) {
         objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(52, 10), 0, 99999))
@@ -32,15 +32,21 @@ draw()
 
 function draw() {
     dl.reset()
+    let offset = objects[0].s.scale(-1).add(screenSize.scale(0.5))
     objects.forEach((o, i) => {
         let gb = Math.round(255/20*o.health)
         let col = o.health<20 ? "rgb(255," + gb + "," + gb + ")" : "white"
         //console.log(gb, col)
-        dl.drawShape(o.shape, false, col, objects[0].s.scale(-1).add(screenSize.scale(0.5)))
+        dl.drawShape(o.shape, false, col, offset)
+        let gridThree = generateGridNumbers(100, 0, screenSize.x -0)
+        gridThree.forEach(n => dl.drawLineRel(0, n, 800, 0, "rgb(50,50,50)", offset ))
+        gridThree.forEach(n => dl.drawLineRel(n, 0, 0, 800, "rgb(50,50,50)", offset ))
+        dl.drawShape(o.history, true, "grey", offset)
         if (debugMode === 1) {
-            dl.drawShape(o.history, true, "white")
-            dl.drawArrowRel(o.s, o.v.scale(20))
-            dl.drawArrowRel(o.s, calculateGravities(objects, o.s).scale(2500), "green")
+            // dl.drawShape(o.history, true, "grey", offset)
+            dl.drawArrowRel(o.s, o.v.scale(20), "white", offset)
+            dl.drawArrowRel(o.s, calculateGravities(objects, o.s).scale(2500), "green", offset)
+            dl.drawShape(o.history, true, "grey", offset)
         }
         if (debugMode === 2) {
             let vectorStart = new Vec(300, 300)
@@ -53,13 +59,13 @@ function draw() {
         if (debugMode === 3) {
             const ke = Math.round(o.kineticEnergy)
             const pe = gravitationalPotentials(objects, o.s) * o.mass
-            dl.fillText(ke.toFixed(1), o.s.x, o.s.y, "red")
-            dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20, "blue")
-            dl.fillText((ke + pe).toFixed(1), o.s.x - 100, o.s.y, "green")
+            dl.fillText(ke.toFixed(1), o.s.x, o.s.y, "red", offset)
+            dl.fillText(pe.toFixed(1), o.s.x, o.s.y + 20, "blue", offset)
+            dl.fillText((ke + pe).toFixed(1), o.s.x - 100, o.s.y, "green", offset)
         }
     })
     if (debugMode === 4) {
-        let gridTwo = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750]
+        let gridTwo = generateGridNumbers(100, 100, screenSize.x -100)
         for (const n of gridTwo) {
             for (const m of gridTwo) {
                 dl.fillText(gravitationalPotentials(objects, new Vec(n, m)).toFixed(1), n, m, "grey")

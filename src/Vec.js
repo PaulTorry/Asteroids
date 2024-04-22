@@ -10,6 +10,9 @@ class Vec {
     add(a) {
         return new Vec(this.x + a.x, this.y + a.y)
     }
+    addXY(x, y) {
+        return new Vec(this.x + x, this.y + y)
+    }
     subtract(s) {
         return new Vec(this.x - s.x, this.y - s.y)
     }
