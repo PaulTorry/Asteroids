@@ -34,7 +34,7 @@ function generateGridNumbers(interval, start, finish){
   let s = Math.floor(start/interval)
   let f = Math.ceil(finish/interval)
   let grid = [...Array(1+f-s).keys()].map(x => x+s).map(x => x*interval)
-  console.log(s,f,grid);
+  // console.log(s,f,grid);
   return grid
 }
 
