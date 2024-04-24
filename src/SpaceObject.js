@@ -129,7 +129,7 @@ class SpaceObject {
     }
     get mass() {
         let triangles = this.localTriangles
-        return triangles.reduce((p, c, i, a) => p + c.area, 0)
+        return triangles.reduce((p, c, i, a) => p + c.area, 0) * this.density
     }
     get centerOfMass() {
         let triangles = this.localTriangles
@@ -170,5 +170,8 @@ class SpaceObject {
     }
     static makeTriangleShape(length, width) {
         return [new Vec(0, -length), new Vec(-width / 2, 0), new Vec(width / 2, 0)]
+    }
+    static makeSquareShape(length) {
+        return [new Vec(-length, -length), new Vec(-length, length), new Vec(length, length), new Vec(length, -length)]
     }
 }

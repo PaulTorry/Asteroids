@@ -2,14 +2,22 @@ const dl = new DrawLayer(document.getElementById("simulationWindow").getContext(
 const G = 1
 let screenSize = new Vec(800, 800)
 let objects = [
-    new SpaceObject(new Vec(350, 350), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
+    new SpaceObject(new Vec(350, 350), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship", 1),
+    new SpaceObject(new Vec(400, 400), new Vec(0, 0), SpaceObject.makeSquareShape(20, 20), 0, 99999, "black hole", 100),
+
 ]
-let grid = generateGridNumbers(200, 300, screenSize.x -300)
+let grid = generateGridNumbers(150, 400, screenSize.x -400)
 for (const n of grid) {
     for (const m of grid) {
-        objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(52, 10), 0, 99999))
+        objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(30, 6), 0, 99999))
     }
 }
+// let gridd = generateGridNumbers(200, 700, screenSize.x -100)
+// for (const n of gridd) {
+//     for (const m of gridd) {
+//         objects.push(new SpaceObject(new Vec(m, n), new Vec(-1, 1), SpaceObject.makeAsteroidShape(30, 6), 0, 99999))
+//     }
+// }
 let debugMode = 0
 let lastTime = 0
 let keyLog = {}
@@ -19,7 +27,7 @@ document.addEventListener("keydown", (e) => {
         console.log(objects[0].momentOfInertia)
     }
     if (e.key === "o") {
-        //objects.forEach((o) => o.v = putInOrbit(gravityObjects[0], o.s))
+        objects.forEach((o) => o.v = putInOrbits(objects, o.s).scale(1))
     }
     if (e.key === "d") {
         debugMode = (debugMode + 1) % 5
@@ -28,7 +36,7 @@ document.addEventListener("keydown", (e) => {
 })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
 draw()
-
+objects.forEach((o) => o.v = putInOrbits(objects, o.s).scale(1))
 
 function draw() {
     dl.reset()
@@ -89,7 +97,7 @@ function doCollisions(o, oo, p) {
 function updatePhysics(dt) {
     objects.forEach((o, i) => {
         o.update(dt, calculateGravities(objects, o.s))
-        o.checkBounds(...screenSize)
+        // o.checkBounds(...screenSize)
         //o.applyGravity(gravityObjects[0], dt)
         if (o.ttl < 0) { objects.splice(i, 1) }
     }

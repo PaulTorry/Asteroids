@@ -22,8 +22,17 @@ function gravitationalPotential(g, s) {
 function gravitationalPotentials(a, s) {
   return a.reduce((p, c) => p + gravitationalPotential(c, s), 0)
 }
+
+function putInOrbits(a, s){
+  return a.reduce((p, c) => p.add(putInOrbit(c, s)), new Vec(0, 0))
+}
+
 function putInOrbit(g, s) {
   const r = s.subtract(g.s)
+  if (r.mag <= 1) {
+    return new Vec(0, 0)
+  }
+  // console.log(g, g.v, s, r, r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag)));
   return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag)) // adjust for G
 }
 function split(a, si, fi) {
