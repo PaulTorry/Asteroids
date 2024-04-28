@@ -28,7 +28,14 @@ class Vec {
     cross(a) {
         return (this.x * a.y) - (a.x * this.y)
     }
-    get unit() {
+    power(p = 1 ){
+        //return this.scale(1)
+        console.log(this.unit, this.mag, this.mag**2);
+        console.log(this.unit.scale(this.mag ** p));
+        return this.unit.scale(this.mag)
+    }
+    get unit() { 
+        if(this.mag < 0.00001) return new Vec(0,0)
         return this.scale(1 / this.mag)
     }
     get theta() {
@@ -47,3 +54,9 @@ class Vec {
         return a.add(b)
     }
 }
+
+let v = new Vec(0, 0)
+console.log(v);
+console.log(v.unit, v.mag, v.mag**2);
+console.log(v.unit.scale(v.mag ** 0.5));
+console.log(v.power(1));

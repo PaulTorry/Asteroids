@@ -22,15 +22,17 @@ function gravitationalPotential(g, s) {
 function gravitationalPotentials(a, s) {
   return a.reduce((p, c) => p + gravitationalPotential(c, s), 0)
 }
-function calculateOrbitVelocity(g, s) {
+function calculateOrbitVelocity(g, s, m) {
   const r = s.subtract(g.s)
   if(r.mag <= 1) {
    return new Vec(0,0)
   }
-  return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag)) // adjust for G
+  console.log(g, s, m);
+  if (m < 1) return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
+  return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass ** 2 / (r.mag * (g.mass + m)))) // adjust for G
 }
-function calculateOrbitVelocities(a, s) {
-  return a.reduce((p, c) => p.add(calculateOrbitVelocity(c, s)), new Vec(0, 0))
+function calculateOrbitVelocities(a, s, m = 0) {
+  return a.reduce((p, c) => p.add(calculateOrbitVelocity(c, s, m).power(2)), new Vec(0, 0)).power(0.5)
 }
 function split(a, si, fi) {
   let aa = a.concat(a)
