@@ -27,7 +27,7 @@ function calculateOrbitVelocity(g, s, m) {
   if(r.mag <= 1) {
    return new Vec(0,0)
   }
-  console.log(g, s, m);
+  // console.log(g, s, m);
   if (m < 1) return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
   return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass ** 2 / (r.mag * (g.mass + m)))) // adjust for G
 }

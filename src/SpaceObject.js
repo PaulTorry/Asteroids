@@ -91,9 +91,9 @@ class SpaceObject {
         this.omega = loc.subtract(this.s).cross(j) / (this.momentOfInertia * 100)
         const closest = this.findClosestPoint(reloc)
         if (this.type === "ship") {
-            console.log("the ship has been hit")
+            // console.log("the ship has been hit")
             this.health -= 1
-            console.log(this.health)
+            // console.log(this.health)
         }
         if (this.type === "bullet") {
             this.ttl = 0

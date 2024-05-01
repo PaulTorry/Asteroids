@@ -30,9 +30,9 @@ class Vec {
     }
     power(p = 1 ){
         //return this.scale(1)
-        console.log(this.unit, this.mag, this.mag**2);
-        console.log(this.unit.scale(this.mag ** p));
-        return this.unit.scale(this.mag)
+        // console.log(this.unit, this.mag, this.mag**2);
+        // console.log(this.unit.scale(this.mag ** p));
+        return this.unit.scale(this.mag**p)
     }
     get unit() { 
         if(this.mag < 0.00001) return new Vec(0,0)
@@ -55,8 +55,7 @@ class Vec {
     }
 }
 
-let v = new Vec(0, 0)
+let v = new Vec(10, 10)
 console.log(v);
-console.log(v.unit, v.mag, v.mag**2);
-console.log(v.unit.scale(v.mag ** 0.5));
-console.log(v.power(1));
+// console.log(v.sunit.scale(v.mag ** 0.5));
+console.log(v.power(0.5));

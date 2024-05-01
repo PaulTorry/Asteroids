@@ -2,7 +2,7 @@ const dl = new DrawLayer(document.getElementById("simulationWindow").getContext(
 const G = 1
 let screenSize = new Vec(800, 800)
 let objects = [
-    new SpaceObject(new Vec(350, 350), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
+    new SpaceObject(new Vec(500, 500), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
 ]
 let grid = [200, 300, 400]
 for (const n of grid) {
@@ -28,7 +28,9 @@ document.addEventListener("keydown", (e) => {
     }
 })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
+objects.forEach((o) => o.v = calculateOrbitVelocities(objects, o.s, o.mass))
 draw()
+
 
 
 function draw() {
