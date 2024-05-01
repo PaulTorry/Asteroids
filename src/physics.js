@@ -1,16 +1,13 @@
 const dl = new DrawLayer(document.getElementById("simulationWindow").getContext("2d"), "white", "black", "white")
 const G = 1
 let screenSize = new Vec(800, 800)
-let gameRunning = true
-let objects = [
-    new SpaceObject(new Vec(500, 500), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
-]
-let grid = [200,400]
-for (const n of grid) {
-    for (const m of grid) {
-        objects.push(new SpaceObject(new Vec(m, n), new Vec(0, 0), SpaceObject.makeAsteroidShape(52, 10), 0, 99999, "asteroid", 1))
-    }
-}
+let gameRunning = ""
+
+let objects 
+let grid
+let winCondition
+loadLevel()
+
 let debugMode = 0
 let lastTime = 0
 let keyLog = {}
@@ -24,15 +21,36 @@ document.addEventListener("keydown", (e) => {
         objects.forEach((o) => console.log(o.v))
     }
     if (e.key === "d") {
+        console.log("debug", debugMode + 1);
         debugMode = (debugMode + 1) % 5
         console.log(debugMode)
     }
-    if(e.key === "r" && gameRunning === false) {
+    if(e.key === "r" && gameRunning) {
         console.log("the game has been reset")
+        gameRunning = ""
+        loadLevel()
+        update(0)
     }
 })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
 draw()
+
+function loadLevel(){
+    objects = [
+        new SpaceObject(new Vec(500, 500), new Vec(0, 0), SpaceObject.makeTriangleShape(50, 20), 0, 99999, "ship"),
+    ]
+    grid = [200,400]
+    for (const n of grid) {
+        for (const m of grid) {
+            objects.push(new SpaceObject(new Vec(m, n), new Vec(0, 0), SpaceObject.makeAsteroidShape(52, 10), 0, 99999, "asteroid", 1))
+        }
+    }
+    objects.forEach((o) => o.v = calculateOrbitVelocities(objects, o.s, o.mass))
+    winCondition = () => {
+        console.log(objects.length);
+        return objects.length > 5
+    }
+}
 
 
 function draw() {
@@ -80,6 +98,7 @@ function draw() {
 function drawGameOverScreen() {
     dl.reset()
     dl.fillText("game over", ...screenSize.scale(0.5), "white")
+    dl.fillText(gameRunning, 400, 550, "white")
     dl.fillText("press R to reset", 400, 450, "white")
     console.log("hello")
 }
@@ -116,15 +135,19 @@ function update(t) {
     let dt = 0.05 / itt //(t - lastTime) / 50 //fix
     if(objects[0].health <= 0) {
         console.log("game over")
+        gameRunning = "ship destroyed"
         drawGameOverScreen()
-        gameRunning = false
+    }
+    if(winCondition()){
+        gameRunning = "win"
+        drawGameOverScreen()
     }
     for (let i = 0; i < itt; i++) { updatePhysics(dt) }
 
 
     objects[0].accelerate(keyLog)
     lastTime = t
-    if(gameRunning) {
+    if(!gameRunning) {
     setTimeout(update, 1)
     draw()
     }

@@ -12,7 +12,7 @@ class SpaceObject {
         this.type = type
         this.age = 0
         this.density = density
-        this.health = 5
+        this.health = 1
         this.reCenter()
     }
     update(dt, gg) {
