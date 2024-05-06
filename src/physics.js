@@ -7,7 +7,8 @@ let objects;
 let grid;
 let debugMode = 0
 let lastTime = 0
-loadLevel()
+let level = 1
+loadLevel(level)
 let keyLog = {}
 document.addEventListener("keydown", (e) => {
     keyLog[e.key] = true
@@ -24,10 +25,9 @@ document.addEventListener("keydown", (e) => {
     }
     if (e.key === "r" && gameRunning === false) {
         console.log("the game has been reset")
-        loadLevel()
+        loadLevel(level)
         gameRunning = true
         update()
-
     }
 })
 document.addEventListener("keyup", (e) => { keyLog[e.key] = false })
@@ -55,6 +55,11 @@ function loadLevel(level = 1) {
             }
         }
         winCondition = () => !objects.find((v, i, a) => v.type === "asteroid")
+    }
+    else {
+        drawGameOverScreen("Whole game completed")
+        level = 1
+        draw()
     }
 }
 function draw() {
@@ -137,14 +142,15 @@ function update(t) {
     let itt = 2
     let dt = 0.05 / itt //(t - lastTime) / 50 //fix
     if (objects[0].health <= 0) {
-        console.log("game over")
-        drawGameOverScreen("game over")
+        console.log("ship destroyed")
+        drawGameOverScreen("ship destroyed")
         gameRunning = false
     }
     if (winCondition()) {
-        console.log("you win")
+        level += 1
+        console.log("you win this level")
         gameRunning = false
-        drawGameOverScreen("you win")
+        drawGameOverScreen("you win this level")
     }
     for (let i = 0; i < itt; i++) { updatePhysics(dt) }
 

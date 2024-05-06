@@ -50,11 +50,11 @@ class SpaceObject {
     accelerate(keys) {
         if (keys["ArrowUp"]) this.v = this.v.add(this.facing.scale(0.35))
         if (keys["ArrowDown"]) this.v = this.v.add(this.facing.scale(-1).scale(0.35))
-        if (keys["ArrowRight"]) this.theta += 0.05, this.omega = 0
-        if (keys["ArrowLeft"]) this.theta -= 0.05, this.omega = 0
+        if (keys["ArrowRight"]) this.theta += 0.02, this.omega = 0
+        if (keys["ArrowLeft"]) this.theta -= 0.02, this.omega = 0
         if (keys[" "] && this.cooldown < 0) {
-            this.cooldown = 5
-            objects.push(new SpaceObject(this.s.add(this.facing.scale(80)), this.facing.scale(10).add(this.v), SpaceObject.makeTriangleShape(20, 7), this.theta, 200, "bullet"))
+            this.cooldown = 2
+            objects.push(new SpaceObject(this.s.add(this.facing.scale(40)), this.facing.scale(30).add(this.v), SpaceObject.makeTriangleShape(15, 5), this.theta, 100, "bullet"))
             this.v = this.v.add(this.facing.scale(-0.5))
         }
     }
