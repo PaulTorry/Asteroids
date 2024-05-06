@@ -13,6 +13,7 @@ class SpaceObject {
         this.age = 0
         this.density = density
         this.health = 5
+        this.shield = 3
         this.reCenter()
     }
     update(dt, gg) {
@@ -90,8 +91,9 @@ class SpaceObject {
         const closest = this.findClosestPoint(reloc)
         if (this.type === "ship") {
             console.log("the ship has been hit")
-            this.health -= 1
-            console.log(this.health)
+            if (this.shield > 1) {this.shield -= 1}
+            else{this.health -= 1}
+            console.log(this.health, this.shield)
         }
         if (this.type === "bullet") {
             this.ttl = 0

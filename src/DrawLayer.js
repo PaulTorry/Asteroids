@@ -50,4 +50,15 @@ class DrawLayer {
         this.ctx.stroke()
         this.ctx.strokeStyle = this.defaultStroke
     }
+    drawArc(x, y, r, s = 0,  e = 2 * Math.PI, col = this.defaultStroke, offset = new Vec(0,0)){
+        this.ctx.strokeStyle = col
+        this.ctx.beginPath();
+        this.ctx.arc(...offset.addXY(x, y), r, s, e);
+        this.ctx.stroke();
+        this.ctx.strokeStyle = this.defaultStroke
+    }
+
+    drawCircle(x, y, r, col = this.defaultStroke, offset = new Vec(0,0)){
+        this.drawArc(x, y, r, 0, 2 * Math.PI, col,  offset) 
+    }
 }

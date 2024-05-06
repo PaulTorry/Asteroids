@@ -72,6 +72,11 @@ function draw() {
         dl.drawShape(o.history, true, "grey", offset)
         makeGrid(100, 0, 800).forEach((v, i, a) => dl.drawLineAbs(0, v, 800, v, "rgb(50,50,50)", offset))
         makeGrid(100, 0, 800).forEach((v, i, a) => dl.drawLineAbs(v, 0, v, 800, "rgb(50,50,50)", offset))
+        if(o.type === "ship"){
+            for(let i = 1; i < o.shield; i++){
+                dl.drawCircle(...objects[0].s.add(Vec.getRandomVec(3)), 40, "rgba(250,250,250, 0.4)", offset)
+            }
+        }
         if (debugMode === 1) {
             dl.drawShape(o.history, true, "white", offset)
             dl.drawArrowRel(o.s, o.v.scale(20), "white", offset)

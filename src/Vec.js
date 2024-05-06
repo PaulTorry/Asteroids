@@ -55,4 +55,7 @@ class Vec {
     static add(a, b) {
         return a.add(b)
     }
+    static getRandomVec(length = 1){
+        return new Vec(length, 0).rotate(2 * Math.PI * Math.random())
+    }
 }
