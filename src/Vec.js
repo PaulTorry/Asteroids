@@ -56,9 +56,3 @@ class Vec {
         return a.add(b)
     }
 }
-let v = new Vec(0,0)
-console.log(v.power(-2))
-console.log(v.power(1))
-console.log(v.power(2))
-console.log(v.power(0.5))
-console.log(v.power(2).power(0.5))

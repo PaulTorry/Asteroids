@@ -20,7 +20,6 @@ class SpaceObject {
         this.age += dt
         this.cooldown -= dt
         this.s = this.s.add(this.v.scale(dt))
-        //this.v = this.v.scale(0.995)
         this.theta += this.omega * dt
         this.v = this.v.add(gg.scale(dt))
         this.updateHistory(dt)
@@ -85,7 +84,6 @@ class SpaceObject {
         return arrayPairs(this.baseShape).map((v, i, a) => new Triangle(v[0], v[1]))
     }
     receiveImpulse(j, loc = this.s) {
-        //p.rotate(this.theta).add(this.s))
         const reloc = loc.subtract(this.s).rotate(-this.theta)
         this.v = this.v.add(j.scale(1 / this.mass))
         this.omega = loc.subtract(this.s).cross(j) / (this.momentOfInertia * 100)
@@ -99,7 +97,6 @@ class SpaceObject {
             this.ttl = 0
         }
         if (this.type === "asteroid") {
-            //console.log(objects, this.baseShape, this.mass)
             if (this.mass < 500) {
                 this.ttl = 0
             }
@@ -107,19 +104,12 @@ class SpaceObject {
                 this.ttl = 0
                 const opposite = this.findClosestPoint(reloc.scale(-1))
                 const [a, b] = split(this.baseShape, ...[closest, opposite].sort())
-                // console.log(...[closest, opposite].sort(), split(this.baseShape, ...[closest, opposite].sort()))
                 objects.push(new SpaceObject(this.s, this.v.add(reloc.rotate(Math.PI / 2).unit), [...a, new Vec(0, 0)]))
                 objects.push(new SpaceObject(this.s, this.v.add(reloc.rotate(-Math.PI / 2).unit), [...b, new Vec(0, 0)]))
             }
             else {
                 this.baseShape[closest] = this.baseShape[closest].subtract(this.baseShape[closest].unit.scale(10))
             }
-            //     //
-            //     this.ttl = 0
-            //     const opposite = this.findClosestPoint(reloc.scale(-1))
-            //     const [a, b] = split(this.baseShape, ...[closest, opposite].sort())
-            //    // console.log(...[closest, opposite].sort(), split(this.baseShape, ...[closest, opposite].sort()))
-            //     objects.push(new SpaceObject(this.s, this.v, [...a, new Vec(0, 0)]))
         }
     }
     findClosestPoint(reloc) {
@@ -148,16 +138,7 @@ class SpaceObject {
     get kineticEnergy() {
         return 1 / 2 * this.mass * ((this.v).mag ** 2)
     }
-    //calculateGravity(g) {
-    //return calculateGravity(g, this.s)
-    // }
-    //applyGravity(g, dt) {
-    //this.v = this.v.add(this.calculateGravity(g).scale(dt))
-    //}
-    // putInOrbit(g) {
-    //     const r = this.s.subtract(g.s)
-    //     this.v = r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag))
-    // }
+
     static makeAsteroidShape(size, points) {
         let angle = 0
         let p1 = new Vec(0, -size)

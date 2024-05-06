@@ -4,7 +4,6 @@ class DrawLayer {
         this.defaultStroke = defaultStroke
         this.defaultFill = defaultFill
         this.defaultText = defaultText
-        //this.reset()
     }
     reset() {
         this.ctx.fillStyle = this.defaultFill
@@ -12,7 +11,6 @@ class DrawLayer {
         this.ctx.clearRect(0, 0, ...screenSize)
         this.ctx.fillRect(0, 0, ...screenSize)
         this.ctx.strokeRect(0, 0, ...screenSize)
-        //ctx.beginPath()
         this.ctx.font = "15px Arial";
     }
     drawLineAbs(x1, y1, x2, y2, col = this.defaultStroke, offset = new Vec(0,0)) {
@@ -20,7 +18,6 @@ class DrawLayer {
         this.ctx.beginPath()
         this.ctx.moveTo(...offset.addXY(x1, y1))
         this.ctx.lineTo(...offset.addXY(x2, y2))
-        //this.ctx.closePath()
         this.ctx.stroke()
         this.ctx.strokeStyle = this.defaultStroke
     }

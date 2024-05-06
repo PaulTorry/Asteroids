@@ -68,7 +68,6 @@ function draw() {
     objects.forEach((o, i) => {
         let gb = Math.round(255 / 5 * o.health)
         let col = o.health < 5 ? "rgb(255," + gb + "," + gb + ")" : "white"
-        //console.log(gb, col)
         dl.drawShape(o.shape, false, col, offset)
         dl.drawShape(o.history, true, "grey", offset)
         makeGrid(100, 0, 800).forEach((v, i, a) => dl.drawLineAbs(0, v, 800, v, "rgb(50,50,50)", offset))
@@ -126,7 +125,6 @@ function updatePhysics(dt) {
     objects.forEach((o, i) => {
         o.update(dt, calculateGravities(objects, o.s))
         o.checkBounds(...screenSize)
-        //o.applyGravity(gravityObjects[0], dt)
         if (o.ttl < 0) { objects.splice(i, 1) }
     }
     )
