@@ -28,7 +28,6 @@ function calculateOrbitVelocity(g, s, m = 0) {
    return new Vec(0,0)
   }
   return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass**2 / (r.mag*(g.mass+m))))
-  //return r.rotate(Math.PI / 2).unit.scale(Math.sqrt(g.mass / r.mag)) // adjust for G
 }
 function calculateOrbitVelocities(a, s, m) {
   return a.reduce((p, c) => p.add(calculateOrbitVelocity(c, s, m).power(2)), new Vec(0, 0)).power(0.5)
