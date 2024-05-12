@@ -3,7 +3,9 @@ let screenSize = new Vec(800, 800)
 let objects = [];
 let G = 1
 
-grid = [200, 400]
+grid = makeGrid(70, 0 , 800)
+// [0,100, 200,300, 400,500, 600, 700, 800]
+
 for (const n of grid) {
     for (const m of grid) {
         objects.push(new SpaceObject(new Vec(m, n), new Vec(0, 0)))
@@ -21,7 +23,7 @@ draw()
 
 function draw() {
     dl.reset()
-    objects.forEach(o => dl.drawCircle(...o.s, 40, "white"))
+    objects.forEach(o => dl.drawCircle(...o.s, 30, "white"))
 }
 
 
@@ -33,7 +35,7 @@ function updatePhysics(dt) {
     
 }
 function update(t) {
-    updatePhysics(0.01)
+    for(let i = 0; i < 100; i++){    updatePhysics(0.0001)}
         setTimeout(update, 1)
         draw()
 }

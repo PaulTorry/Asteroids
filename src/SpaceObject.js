@@ -9,6 +9,10 @@ class SpaceObject {
     update(dt, gg) {
         this.s = this.s.add(this.v.scale(dt)) 
         this.v = this.v.add(gg.scale(dt))
+        if(this.v.mag > 100){
+            this.v = this.v.scale(0.9)
+        }
+
         this.updateHistory(dt)
     }
     updateHistory(dt) {

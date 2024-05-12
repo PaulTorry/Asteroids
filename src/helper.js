@@ -1,13 +1,16 @@
 function arrayPairs(arr) {
   return arr.map((v, i, a) => [a.at(i - 1), a.at(i)])
 }
-function calculateGravity(g, s) {
-  const r = s.subtract(g.s)
-  if (r.mag <= 1) {
+function calculateGravity(g, s, r0 = 100) {
+  let r = s.subtract(g.s)
+  if (r.mag <= 0.01 || r.mag > 200 ) {
     return new Vec(0, 0)
   }
-  //console.log(r, r.unit.scale(-g.mass*G / r.mag ** 2))
-  return r.unit.scale(-g.mass * G / r.mag ** 2)
+  r = r.scale(1/r0)
+   let attraction =  r.unit.scale(-g.mass / r.mag ** 2)
+   let repulsion =  r.unit.scale(g.mass / r.mag ** 6)
+  return attraction.add(repulsion).scale(1/r0)
+
 }
 function calculateGravities(a, s) {
   return a.reduce((p, c) => p.add(calculateGravity(c, s)), new Vec(0, 0))
