@@ -18,7 +18,7 @@
         "name": "Launch Chrome Noah",
             "request": "launch",
             "type": "chrome",
-            "url": "C:\\Users\\dnlry\\OneDrive\\Documents\\Github\\Asteroids\\src\\simulation.html",
+            "url": "C:\\Users\\dnlry\\OneDrive\\Documents\\Github\\particle-simulation\\src\\simulation.html",
             "webRoot": "${workspaceFolder}"
         },
         {
@@ -42,7 +42,6 @@
             "url": "C:\\Users\\ptorrington\\Coding Noah\\repos\\Asteroids\\src\\simulation.html",
             "webRoot": "${workspaceFolder}"
         },
-
    
     ]
 }

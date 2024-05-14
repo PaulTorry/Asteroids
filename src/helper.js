@@ -1,16 +1,22 @@
 function arrayPairs(arr) {
   return arr.map((v, i, a) => [a.at(i - 1), a.at(i)])
 }
-function calculateGravity(g, s) {
+function calculateForce(g, s) {
   const r = s.subtract(g.s)
-  if (r.mag <= 1) {
+  let attraction;
+  let repulsion;
+  let effectiveDistance;
+  if (r.mag <= 1||r.mag>500) {
     return new Vec(0, 0)
   }
+  effectiveDistance = (1/atomicRadius)*r.mag
+  //attraction = r.unit.scale(- 1/effectiveDistance**2)
   //console.log(r, r.unit.scale(-g.mass*G / r.mag ** 2))
-  return r.unit.scale(-g.mass * G / r.mag ** 2)
+  //console.log(g.mass)
+  return r.unit.scale(1/effectiveDistance**6 - 1/effectiveDistance**2)
 }
-function calculateGravities(a, s) {
-  return a.reduce((p, c) => p.add(calculateGravity(c, s)), new Vec(0, 0))
+function calculateForces(a, s) {
+  return a.reduce((p, c) => p.add(calculateForce(c, s)), new Vec(0, 0))
 }
 function gravitationalPotential(g, s) {
   const r = s.subtract(g.s)
